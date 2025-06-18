@@ -1,0 +1,14 @@
+CREATE TABLE Pokemon (
+    name TEXT DEFAULT NULL,
+    url TEXT DEFAULT NULL
+);
+
+savePokemon:
+INSERT INTO Pokemon(name, url)
+VALUES(?, ?);
+
+getAllPokemon:
+SELECT * FROM Pokemon;
+
+deleteAllPokemon:
+DELETE FROM Pokemon;

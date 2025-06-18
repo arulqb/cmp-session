@@ -1,0 +1,91 @@
+[versions]
+agp = "8.7.3"
+android-compileSdk = "35"
+android-minSdk = "24"
+android-targetSdk = "35"
+androidDriver = "2.1.0"
+androidx-activity = "1.10.1"
+androidx-appcompat = "1.7.0"
+androidx-constraintlayout = "2.2.1"
+androidx-core = "1.16.0"
+androidx-espresso = "3.6.1"
+androidx-lifecycle = "2.9.0"
+androidx-testExt = "1.2.1"
+cameraX = "1.4.2"
+cmptoast = "1.0.3"
+composeMultiplatform = "1.8.1"
+junit = "4.13.2"
+koinComposeViewmodel = "4.1.0"
+koinCompose = "4.1.0"
+koinComposeViewmodelNavigation = "4.1.0"
+kotlin = "2.1.21"
+kotlinxDatetime = "0.6.2"
+moko = "0.18.0"
+lifecycleViewModel = "2.8.3"
+lifecycleViewModelCompose = "2.8.0"
+ktor-client = "2.3.7" #latest version of Ktor
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+napierVersion = "2.6.1"
+sqlDelightVersion = "2.1.0"
+koin-bom = "4.1.0-Beta1"
+coil = "3.0.4"
+
+[libraries]
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraX" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraX" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraX" }
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraX" }
+cmptoast = { module = "network.chaintech:cmptoast", version.ref = "cmptoast" }
+koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koinComposeViewmodelNavigation" }
+insert-koin-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koinCompose" }
+insert-koin-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinComposeViewmodel" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-testExt" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+# Date Time KMP
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+# Moko for permission KMP
+moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "moko" }
+moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko" }
+lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycleViewModel"}
+lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewModelCompose"}
+# Networking Core library and required plugins in here
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-client" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor-client" }
+ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor-client" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-client" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor-client" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-client" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-client" }
+# Logging
+napier = { module = "io.github.aakira:napier", version.ref = "napierVersion" }
+#DB
+sqdelight-coroutine = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelightVersion" }
+native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelightVersion" }
+android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelightVersion" }
+sqljs-driver = { module = "app.cash.sqldelight:sqljs-driver", version.ref = "sqlDelightVersion" }
+# Koin
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-compose = { module = "io.insert-koin:koin-compose" }
+koin-compose-viewModel = { module = "io.insert-koin:koin-compose-viewmodel" }
+# image loading
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+# sqldelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelight" }

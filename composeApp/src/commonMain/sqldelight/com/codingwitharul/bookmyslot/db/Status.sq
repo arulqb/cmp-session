@@ -1,0 +1,15 @@
+CREATE TABLE Status (
+    message TEXT DEFAULT NULL,
+    status TEXT DEFAULT NULL
+);
+
+saveStatus:
+INSERT INTO Status(message, status)
+VALUES(?, ?);
+
+getAllMessages:
+SELECT * FROM Status;
+
+deleteAllMessages:
+DELETE FROM Status;
+
