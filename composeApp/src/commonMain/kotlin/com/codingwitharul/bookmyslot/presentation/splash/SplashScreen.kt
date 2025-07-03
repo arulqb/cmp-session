@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import bookmyslot.composeapp.generated.resources.Res
 import bookmyslot.composeapp.generated.resources.app_name
@@ -55,6 +56,7 @@ import bookmyslot.composeapp.generated.resources.img_shoe2_splash
 import bookmyslot.composeapp.generated.resources.img_watch_splash
 import bookmyslot.composeapp.generated.resources.pc
 import bookmyslot.composeapp.generated.resources.stallion_beatsides_regular
+import com.codingwitharul.bookmyslot.toBooking
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
@@ -74,7 +76,8 @@ internal fun SplashScreen(navController: NavController) {
         delay(1000)
         value = true
         delay(1000)
-        navController.navigate("login")
+        navController.toBooking()
+        Popup {  }
     }
 
     Box(

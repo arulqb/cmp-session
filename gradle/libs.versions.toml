@@ -29,6 +29,13 @@ napierVersion = "2.6.1"
 sqlDelightVersion = "2.1.0"
 koin-bom = "4.1.0-Beta1"
 coil = "3.0.4"
+#Firebase android
+firebase-android-bom = "32.8.1"
+#Gradle
+gradlePlugins-crashlytics = "2.9.9"
+gradlePlugins-google-services = "4.4.1"
+#Gitlive
+firebase-gitlive-sdk = "1.12.0"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraX" }
@@ -81,6 +88,11 @@ koin-compose-viewModel = { module = "io.insert-koin:koin-compose-viewmodel" }
 # image loading
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+#Firebase
+firebase-android-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-android-bom" }
+firebase-android-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics" }
+#Gitlive
+gitlive-firebase-kotlin-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "firebase-gitlive-sdk" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -88,4 +100,5 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-# sqldelight = { id = "com.squareup.sqldelight", version.ref = "sqlDelight" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "gradlePlugins-crashlytics" }
+google-services = { id = "com.google.gms.google-services", version.ref = "gradlePlugins-google-services" }

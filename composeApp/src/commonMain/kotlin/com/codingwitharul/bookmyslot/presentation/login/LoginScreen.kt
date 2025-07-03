@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,108 +29,106 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import bookmyslot.composeapp.generated.resources.Res
+import bookmyslot.composeapp.generated.resources.dont_have_account
+import bookmyslot.composeapp.generated.resources.facebook
+import bookmyslot.composeapp.generated.resources.google
+import bookmyslot.composeapp.generated.resources.login_button
+import bookmyslot.composeapp.generated.resources.login_illustration
+import bookmyslot.composeapp.generated.resources.login_title
+import bookmyslot.composeapp.generated.resources.logo
+import bookmyslot.composeapp.generated.resources.logo_bml
+import bookmyslot.composeapp.generated.resources.microsoft
+import bookmyslot.composeapp.generated.resources.or_login_with
 import bookmyslot.composeapp.generated.resources.pc
+import bookmyslot.composeapp.generated.resources.phone_number
+import bookmyslot.composeapp.generated.resources.sign_up
+import bookmyslot.composeapp.generated.resources.twitter
 import com.codingwitharul.bookmyslot.PermissionsViewModel
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.runtime.collectAsState
+import org.koin.compose.koinInject
+import com.codingwitharul.bookmyslot.presentation.login.LoginUiEvent
+import com.codingwitharul.bookmyslot.presentation.login.LoginViewModel
 
 @Preview
 @Composable
-fun LoginScreen(navController: NavController) {
-
-    val factory = rememberPermissionsControllerFactory()
-    val controller = remember(factory) {
-        factory.createPermissionsController()
-    }
-
-    BindEffect(controller)
-
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val rotationState = remember { Animatable(0f) }
-
-    val permissionsViewModel = viewModel {
-        PermissionsViewModel(controller)
-    }
-
-    fun login() {
-        if (email.isNotEmpty() && password.isNotEmpty()) {
-            navController.navigate("pokedex")
-        } else {
-            showToast("Please Enter Valid Email/Password")
-        }
-    }
-
-
-    LaunchedEffect(Unit) {
-        rotationState.animateTo(
-            targetValue = 360f,
-            animationSpec = tween(durationMillis = 2000, easing = LinearEasing)
-        )
-        when(permissionsViewModel.state) {
-            PermissionState.Granted -> {
-                showToast("Camera permission is Granted")
-            }
-            PermissionState.DeniedAlways -> {
-
-            }
-            else -> {}
-        }
-    }
+fun LoginScreen(navController: NavController?) {
+    val viewModel: LoginViewModel = koinInject()
+    val state by viewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Illustration/Image
         Image(
-            painter = painterResource(Res.drawable.pc), // Replace with your logo
-            contentDescription = "App Logo",
-            modifier = Modifier.size(150.dp).rotate(rotationState.value)
+            painter = painterResource(Res.drawable.logo_bml),
+            contentDescription = stringResource(Res.string.login_illustration),
+            modifier = Modifier.size(150.dp),
         )
-        // Text(text = "Login", style = androidx.compose.material3.MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            if (permissionsViewModel.state == PermissionState.Granted) {
-                login()
-            } else {
-                permissionsViewModel.provideOrRequestCameraPermission()
+        Spacer(modifier = Modifier.height(24.dp))
+        if (state.loading) {
+            CircularProgressIndicator()
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        if (state.error.isNotEmpty()) {
+            Text(state.error, color = Color.Red)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        if (state.isLoggedIn) {
+            Text("Login Successful!")
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        // Or login with
+        Text(stringResource(Res.string.or_login_with), color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+        Spacer(modifier = Modifier.height(12.dp))
+        // Social Buttons Row
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            IconButton(onClick = { viewModel.onEvent(LoginUiEvent.OnFacebookLoginClick) }, enabled = !state.loading) {
+                Icon(
+                    painter = painterResource(Res.drawable.facebook),
+                    contentDescription = stringResource(Res.string.facebook),
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(40.dp)
+                )
             }
-        }, modifier = Modifier.fillMaxWidth()) {
-            Text("Login")
+            IconButton(onClick = { viewModel.onEvent(LoginUiEvent.OnGoogleLoginClick) }, enabled = !state.loading) {
+                Icon(
+                    painter = painterResource(Res.drawable.google),
+                    contentDescription = stringResource(Res.string.google),
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
         }
-        TextButton(onClick = { /* Handle forgot password */ }) {
-            Text("Forgot Password?")
-        }
-        TextButton(onClick = { /* Handle registration */ }) {
-            Text("Don't have an account? Register")
+        Spacer(modifier = Modifier.height(24.dp))
+        // Sign up prompt
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(stringResource(Res.string.dont_have_account) + " ")
+            TextButton(onClick = { /* Handle sign up */ }) {
+                Text(stringResource(Res.string.sign_up))
+            }
         }
     }
 }

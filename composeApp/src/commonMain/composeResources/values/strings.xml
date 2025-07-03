@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Book My Slot</string>
-
+    <string name="login_title">Login</string>
+    <string name="login_illustration">Login Illustration</string>
+    <string name="phone_number">Phone number</string>
+    <string name="login_button">Login</string>
+    <string name="or_login_with">OR login with</string>
+    <string name="facebook">Facebook</string>
+    <string name="google">Google</string>
+    <string name="twitter">Twitter</string>
+    <string name="dont_have_account">Don't have an account?</string>
+    <string name="sign_up">Sign up</string>
 </resources>

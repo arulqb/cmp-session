@@ -21,12 +21,7 @@ fun App(koinAppDeclaration: KoinAppDeclaration? = null) {
         modules(appModule())
     }) {
         AppTheme {
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "splash") {
-                composable("splash") { SplashScreen(navController) }
-                composable("login") { LoginScreen(navController) }
-                composable("pokedex") { PokedexScreen() }
-            }
+            Router()
         }
     }
 }

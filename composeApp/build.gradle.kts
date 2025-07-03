@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     id("app.cash.sqldelight") version "2.1.0"
     kotlin("plugin.serialization") version "2.0.0"
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.crashlytics) apply false
 }
 
 kotlin {
@@ -64,6 +66,18 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
 //            DB
             implementation(libs.android.driver)
+//            firebase
+            // Import the BoM for the Firebase platform
+            implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
+
+            // Add the dependency for the Firebase Authentication library
+            // When using the BoM, you don't specify versions in Firebase library dependencies
+            implementation("com.google.firebase:firebase-auth")
+
+            // Also add the dependencies for the Credential Manager libraries and specify their versions
+            implementation("androidx.credentials:credentials:1.3.0")
+            implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+            implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -100,6 +114,7 @@ kotlin {
 //            coil for image
 //            implementation(libs.coil.compose)
 //            implementation(libs.coil.network.ktor)
+//            api(libs.gitlive.firebase.kotlin.crashlytics)
         }
 
         jsMain.dependencies {
