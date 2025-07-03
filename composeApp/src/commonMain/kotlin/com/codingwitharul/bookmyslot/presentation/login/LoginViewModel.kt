@@ -2,6 +2,8 @@ package com.codingwitharul.bookmyslot.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codingwitharul.bookmyslot.common.auth.GoogleAuthProvider
+import com.codingwitharul.bookmyslot.common.auth.GoogleAuthenticator
 import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
 import com.codingwitharul.bookmyslot.data.model.UserInfo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,8 +50,7 @@ class LoginViewModel(private val authRepo: AuthRepo) : ViewModel() {
     private fun loginWithGoogle() {
         _uiState.value = _uiState.value.copy(loading = true, error = "")
         viewModelScope.launch {
-            // TODO: Implement Google OAuth logic (platform-specific)
-            // On success, get idToken and call:
+
             // onEvent(LoginUiEvent.OnOAuthTokenReceived("google", idToken))
             _uiState.value = _uiState.value.copy(loading = false)
         }
@@ -58,7 +59,6 @@ class LoginViewModel(private val authRepo: AuthRepo) : ViewModel() {
     private fun loginWithFacebook() {
         _uiState.value = _uiState.value.copy(loading = true, error = "")
         viewModelScope.launch {
-            // TODO: Implement Facebook OAuth logic (platform-specific)
             // On success, get accessToken and call:
             // onEvent(LoginUiEvent.OnOAuthTokenReceived("facebook", accessToken))
             _uiState.value = _uiState.value.copy(loading = false)

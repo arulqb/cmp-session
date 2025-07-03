@@ -14,7 +14,7 @@ import com.codingwitharul.bookmyslot.presentation.splash.SplashScreen
 @Composable
 fun Router() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppRoutes.Booking.name) {
+    NavHost(navController = navController, startDestination = AppRoutes.Login.name) {
         composable(AppRoutes.Splash.name) { SplashScreen(navController) }
         composable(AppRoutes.Login.name) { LoginScreen(navController) }
         composable(AppRoutes.Pokedex.name) { PokedexScreen() }

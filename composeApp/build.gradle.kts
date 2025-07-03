@@ -75,8 +75,8 @@ kotlin {
             implementation("com.google.firebase:firebase-auth")
 
             // Also add the dependencies for the Credential Manager libraries and specify their versions
-            implementation("androidx.credentials:credentials:1.3.0")
-            implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+            implementation("androidx.credentials:credentials:1.5.0")
+            implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
             implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
         }
         commonMain.dependencies {
@@ -160,13 +160,26 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug") // Explicitly apply your custom debug config
+        }
         getByName("release") {
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "bookmyslot"
+            keyPassword = "123456"
+            storeFile = rootProject.file("android.jks")
+            storePassword = "123456"
+        }
     }
 }
 

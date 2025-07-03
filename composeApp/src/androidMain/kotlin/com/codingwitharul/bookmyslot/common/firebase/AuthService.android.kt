@@ -25,8 +25,7 @@ actual class AuthService {
     }
 
     actual fun initialize() {
-        val c:CredentialManager
-        c.getCredential()
+
     }
 
     actual suspend fun signInAnonymously(): User? {

@@ -18,6 +18,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -49,7 +50,6 @@ import bookmyslot.composeapp.generated.resources.pc
 import bookmyslot.composeapp.generated.resources.phone_number
 import bookmyslot.composeapp.generated.resources.sign_up
 import bookmyslot.composeapp.generated.resources.twitter
-import com.codingwitharul.bookmyslot.PermissionsViewModel
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
@@ -59,9 +59,14 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
+import com.codingwitharul.bookmyslot.common.auth.GoogleAuthProvider
 import org.koin.compose.koinInject
 import com.codingwitharul.bookmyslot.presentation.login.LoginUiEvent
 import com.codingwitharul.bookmyslot.presentation.login.LoginViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Preview
 @Composable
@@ -110,14 +115,19 @@ fun LoginScreen(navController: NavController?) {
                     modifier = Modifier.size(40.dp)
                 )
             }
-            IconButton(onClick = { viewModel.onEvent(LoginUiEvent.OnGoogleLoginClick) }, enabled = !state.loading) {
-                Icon(
-                    painter = painterResource(Res.drawable.google),
-                    contentDescription = stringResource(Res.string.google),
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(40.dp)
-                )
+            GoogleButtonUiContainer(onGoogleSignInResult = { googleUser ->
+                showToast("Sign In COmpleted $googleUser")
+            }) {
+                IconButton(onClick = { this.onClick() }, enabled = !state.loading) {
+                    Icon(
+                        painter = painterResource(Res.drawable.google),
+                        contentDescription = stringResource(Res.string.google),
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
             }
+
         }
         Spacer(modifier = Modifier.height(24.dp))
         // Sign up prompt
@@ -131,4 +141,34 @@ fun LoginScreen(navController: NavController?) {
             }
         }
     }
+}
+
+
+interface GoogleButtonUiContainerScope {
+    fun onClick()
+}
+
+@Composable
+fun GoogleButtonUiContainer(
+    modifier: Modifier = Modifier,
+    onGoogleSignInResult: (String?) -> Unit,
+    content: @Composable GoogleButtonUiContainerScope.() -> Unit,
+) {
+    val googleAuthProvider = koinInject<GoogleAuthProvider>()
+    val googleAuthUiProvider = googleAuthProvider.getUiProvider()
+    val coroutineScope = rememberCoroutineScope()
+    val uiContainerScope = remember {
+        object : GoogleButtonUiContainerScope {
+            override fun onClick() {
+                coroutineScope.launch {
+                    val googleUser = googleAuthUiProvider.login()
+                    onGoogleSignInResult(googleUser)
+                }
+            }
+        }
+    }
+    Surface(
+        modifier = modifier,
+        content = { uiContainerScope.content() }
+    )
 }

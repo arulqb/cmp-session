@@ -77,7 +77,6 @@ internal fun SplashScreen(navController: NavController) {
         value = true
         delay(1000)
         navController.toBooking()
-        Popup {  }
     }
 
     Box(
