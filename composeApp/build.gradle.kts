@@ -10,7 +10,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     id("app.cash.sqldelight") version "2.1.0"
     kotlin("plugin.serialization") version "2.0.0"
-    alias(libs.plugins.google.services) apply false
+    id("com.google.gms.google-services")
     alias(libs.plugins.crashlytics) apply false
 }
 
@@ -75,8 +75,8 @@ kotlin {
             implementation("com.google.firebase:firebase-auth")
 
             // Also add the dependencies for the Credential Manager libraries and specify their versions
-            implementation("androidx.credentials:credentials:1.3.0")
-            implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+            implementation("androidx.credentials:credentials:1.5.0")
+            implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
             implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
         }
         commonMain.dependencies {
@@ -103,6 +103,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.encoding)
+            implementation(libs.ktor.client.auth)
 //            DB
             implementation(libs.sqdelight.coroutine)
 //            koin
@@ -111,6 +112,8 @@ kotlin {
             implementation(libs.koin.compose.viewmodel.navigation)
 //            3rd party
             implementation(libs.cmptoast)
+            // logging
+            implementation(libs.napier)
 //            coil for image
 //            implementation(libs.coil.compose)
 //            implementation(libs.coil.network.ktor)
@@ -160,13 +163,26 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug") // Explicitly apply your custom debug config
+        }
         getByName("release") {
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "bookmyslot"
+            keyPassword = "123456"
+            storeFile = rootProject.file("android.jks")
+            storePassword = "123456"
+        }
     }
 }
 
