@@ -1,14 +1,9 @@
 package com.codingwitharul.bookmyslot.di
 
-import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import com.codingwitharul.bookmyslot.common.DriverFactory
 import com.codingwitharul.bookmyslot.common.auth.GoogleAuthProvider
-import com.codingwitharul.bookmyslot.common.auth.GoogleAuthenticator
-import com.codingwitharul.bookmyslot.common.firebase.AuthService
-import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.java.KoinAndroidApplication.create
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.bind

@@ -2,8 +2,6 @@ package com.codingwitharul.bookmyslot.common.auth
 
 
 import android.content.Context
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -12,7 +10,6 @@ import androidx.credentials.exceptions.NoCredentialException
 import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
@@ -39,16 +36,17 @@ actual class GoogleAuthenticator(
                 val cred = GoogleIdTokenCredential.createFrom(credential.data)
                 val idToken = cred.idToken
 
+                val authCredential = GoogleAuthProvider.getCredential(idToken, null)
+                val fireBase = FirebaseAuth.getInstance()
+                val user = fireBase.signInWithCredential(authCredential).await().user
                 return Result.success(GoogleUser(
                     name = cred.displayName,
                     phoneNumber = cred.phoneNumber,
                     profilePictureUrl = cred.profilePictureUri.toString(),
-                    token = idToken
+                    token = idToken,
+                    email = user?.email,
+                    uid = user?.uid!!
                 ))
-//                val authCredential = GoogleAuthProvider.getCredential(idToken, null)
-//                val fireBase = FirebaseAuth.getInstance()
-//                val user = fireBase.signInWithCredential(authCredential).await().user
-//                return user?.displayName.toString()
             }
             return Result.failure("No Google ID token found".toThrowable())
         } catch (e: NoCredentialException) {

@@ -13,10 +13,11 @@ import org.koin.compose.koinInject
 @Serializable
 data class GoogleUser(
     val token: String,
+    val uid: String,
     val name: String?,
     val profilePictureUrl: String?,
     val email: String? = null,
-    val phoneNumber: String? = null,
+    val phoneNumber: String? = null
 )
 
 interface GoogleButtonUiContainerScope {

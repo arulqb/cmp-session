@@ -33,7 +33,7 @@ coil = "3.0.4"
 firebase-android-bom = "32.8.1"
 #Gradle
 gradlePlugins-crashlytics = "2.9.9"
-gradlePlugins-google-services = "4.4.1"
+gradlePlugins-google-services = "4.4.3"
 #Gitlive
 firebase-gitlive-sdk = "1.12.0"
 
