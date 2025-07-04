@@ -1,8 +1,8 @@
-package com.codingwitharul.bookmyslot.data
+package com.codingwitharul.bookmyslot.data.repo
 
 
 import com.codingwitharul.bookmyslot.common.client
-import com.codingwitharul.bookmyslot.db.BookMySlotDatabase
+import com.codingwitharul.bookmyslot.data.db.DatabaseHelper
 import com.codingwitharul.bookmyslot.domain.model.Pokemon
 import com.codingwitharul.bookmyslot.domain.model.PokemonResponse
 import com.codingwitharul.bookmyslot.domain.repo.PokemonRepo
@@ -16,7 +16,7 @@ import io.ktor.client.request.url
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class PokemonRepositoryImpl(val db: BookMySlotDatabase): PokemonRepo {
+class PokemonRepositoryImpl(val db: DatabaseHelper): PokemonRepo {
     override suspend fun getPokemonList(): Flow<Resource<PokemonResponse>> {
         return flow {
             emit(Resource.Loading(true))

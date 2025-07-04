@@ -2,30 +2,46 @@ package com.codingwitharul.bookmyslot.di
 
 
 import com.codingwitharul.bookmyslot.common.DriverFactory
-import com.codingwitharul.bookmyslot.data.PokemonRepositoryImpl
+import com.codingwitharul.bookmyslot.data.repo.PokemonRepositoryImpl
 import com.codingwitharul.bookmyslot.data.repo.AuthRepoImpl
 import com.codingwitharul.bookmyslot.db.BookMySlot
-import com.codingwitharul.bookmyslot.db.BookMySlotDatabase
+import com.codingwitharul.bookmyslot.data.db.DatabaseHelper
 import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
 import com.codingwitharul.bookmyslot.domain.repo.PokemonRepo
+import com.codingwitharul.bookmyslot.data.networking.ApiClientHelper
+import com.codingwitharul.bookmyslot.data.repo.BookingRepoImpl
+import com.codingwitharul.bookmyslot.domain.repo.BookingRepo
+import com.codingwitharul.bookmyslot.domain.usecase.LoginUseCase
+import com.codingwitharul.bookmyslot.presentation.booking.BookingViewModel
 import com.codingwitharul.bookmyslot.presentation.login.LoginViewModel
 import com.codingwitharul.bookmyslot.presentation.pokedex.PokedexViewModel
-import io.ktor.client.HttpClient
+import com.codingwitharul.bookmyslot.presentation.splash.SplashScreenViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val dataModule = module {
-    single<BookMySlotDatabase> {
-        BookMySlotDatabase(BookMySlot(get<DriverFactory>().createDriver()))
+    single<DatabaseHelper> {
+        DatabaseHelper(BookMySlot(get<DriverFactory>().createDriver()))
     }
     single<PokemonRepo> { PokemonRepositoryImpl(get()) }
-    single<AuthRepo> { AuthRepoImpl() }
+    single<AuthRepo> { AuthRepoImpl(get(), get()) }
+    single<BookingRepo> { BookingRepoImpl(get(), get()) }
+    single<LoginUseCase> { LoginUseCase(get()) }
+}
+
+val viewModelModule = module {
+    viewModelOf(::SplashScreenViewModel)
     viewModelOf(::LoginViewModel)
     viewModelOf(::PokedexViewModel)
+    viewModelOf(::BookingViewModel)
+}
+
+val networkModule = module {
+    single<ApiClientHelper> { ApiClientHelper(get()) }
 }
 
 expect val platformModule: Module // Platform specific Dependencies
 
-fun appModule() = listOf(dataModule, platformModule)
+fun appModule() = listOf(networkModule, viewModelModule, dataModule, platformModule)
 

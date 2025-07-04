@@ -14,8 +14,16 @@ import com.codingwitharul.bookmyslot.presentation.splash.SplashScreen
 @Composable
 fun Router() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppRoutes.Login.name) {
-        composable(AppRoutes.Splash.name) { SplashScreen(navController) }
+    NavHost(navController = navController, startDestination = AppRoutes.Splash.name) {
+        composable(AppRoutes.Splash.name) {
+            SplashScreen { userInfo ->
+                if (userInfo != null) {
+                    navController.toBooking()
+                } else {
+                    navController.toLogin()
+                }
+            }
+        }
         composable(AppRoutes.Login.name) { LoginScreen(navController) }
         composable(AppRoutes.Pokedex.name) { PokedexScreen() }
         composable(AppRoutes.Booking.name) { BookingScreen() }
@@ -33,6 +41,16 @@ sealed class AppRoutes(val name: String) {
 
 fun NavController.toBooking(popUpToRoute: AppRoutes? = AppRoutes.Booking, inclusiveRoute: Boolean = true) {
     this.navigate(AppRoutes.Booking.name) {
+        popUpToRoute?.let {
+            popUpTo(popUpToRoute.name) {
+                inclusive = inclusiveRoute
+            }
+        }
+    }
+}
+
+fun NavController.toLogin(popUpToRoute: AppRoutes? = AppRoutes.Login, inclusiveRoute: Boolean = true) {
+    this.navigate(AppRoutes.Login.name) {
         popUpToRoute?.let {
             popUpTo(popUpToRoute.name) {
                 inclusive = inclusiveRoute

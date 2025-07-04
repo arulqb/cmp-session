@@ -34,8 +34,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -54,29 +59,38 @@ import bookmyslot.composeapp.generated.resources.img_headphone_splash
 import bookmyslot.composeapp.generated.resources.img_shoe1_splash
 import bookmyslot.composeapp.generated.resources.img_shoe2_splash
 import bookmyslot.composeapp.generated.resources.img_watch_splash
+import bookmyslot.composeapp.generated.resources.logo
+import bookmyslot.composeapp.generated.resources.logo_bml
 import bookmyslot.composeapp.generated.resources.pc
 import bookmyslot.composeapp.generated.resources.stallion_beatsides_regular
+import com.codingwitharul.bookmyslot.AppRoutes
+import com.codingwitharul.bookmyslot.db.UserInfo
+import com.codingwitharul.bookmyslot.presentation.login.LoginViewModel
 import com.codingwitharul.bookmyslot.toBooking
+import com.codingwitharul.bookmyslot.toLogin
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
-private fun getSplashList() = listOf(
-    Res.drawable.img_shoe2_splash,
-    Res.drawable.img_shoe2_splash,
-    Res.drawable.img_watch_splash,
-    Res.drawable.img_shoe1_splash,
-)
-
+@Preview
 @Composable
-internal fun SplashScreen(navController: NavController) {
+internal fun SplashScreen(onNavigate: (userInfo: UserInfo?) -> Unit = {}) {
 
-    val showProducts = produceState(initialValue = false) {
+    val viewModel: SplashScreenViewModel = koinInject()
+    val state by viewModel.uiState.collectAsState()
+    var splashAnime by remember { mutableStateOf(true) }
+
+    LaunchedEffect(viewModel.uiState) {
         delay(1000)
-        value = true
+        splashAnime = false
         delay(1000)
-        navController.toBooking()
+        viewModel.uiState.filter { it.loading == false }.collect {
+            onNavigate(state.userInfo)
+        }
     }
 
     Box(
@@ -91,7 +105,7 @@ internal fun SplashScreen(navController: NavController) {
         ) {
 
             AnimatedVisibility(
-                showProducts.value,
+                splashAnime,
                 enter = fadeIn(animationSpec = tween(500)),
                 exit = fadeOut(animationSpec = tween(500))
             ) {
@@ -109,18 +123,12 @@ internal fun SplashScreen(navController: NavController) {
             }
 
             AnimatedVisibility(
-                showProducts.value,
-                enter = slideInHorizontally(
-                    initialOffsetX = { it },
-                    animationSpec = tween(durationMillis = 500)
-                ),
-                exit = slideOutHorizontally(
-                    targetOffsetX = { -it },
-                    animationSpec = tween(durationMillis = 500)
-                )
+                splashAnime,
+                enter = fadeIn(animationSpec = tween(durationMillis = 600)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 1500))
             ) {
                 val widthAnim =
-                    animateDpAsState(targetValue = 150.dp)
+                    animateDpAsState(targetValue = 200.dp)
                 val heightAnim =
                     animateDpAsState(targetValue = 200.dp)
 
@@ -136,7 +144,7 @@ internal fun SplashScreen(navController: NavController) {
                 )
 
                 Image(
-                    painter = painterResource(Res.drawable.pc),
+                    painter = painterResource(Res.drawable.logo_bml),
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.width(widthAnim.value).height(heightAnim.value)

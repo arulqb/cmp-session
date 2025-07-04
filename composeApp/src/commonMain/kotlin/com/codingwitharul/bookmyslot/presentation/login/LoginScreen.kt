@@ -5,6 +5,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +18,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -60,115 +63,130 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import bookmyslot.composeapp.generated.resources.app_name
+import bookmyslot.composeapp.generated.resources.stallion_beatsides_regular
 import com.codingwitharul.bookmyslot.common.auth.GoogleAuthProvider
+import com.codingwitharul.bookmyslot.presentation.components.GoogleButtonUiContainer
+import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import org.koin.compose.koinInject
 import com.codingwitharul.bookmyslot.presentation.login.LoginUiEvent
 import com.codingwitharul.bookmyslot.presentation.login.LoginViewModel
+import com.codingwitharul.bookmyslot.toBooking
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.Font
 
 @Preview
 @Composable
-fun LoginScreen(navController: NavController?) {
+fun LoginScreen(navController: NavController) {
     val viewModel: LoginViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Illustration/Image
-        Image(
-            painter = painterResource(Res.drawable.logo_bml),
-            contentDescription = stringResource(Res.string.login_illustration),
-            modifier = Modifier.size(150.dp),
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        if (state.loading) {
-            CircularProgressIndicator()
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        if (state.error.isNotEmpty()) {
-            Text(state.error, color = Color.Red)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        if (state.isLoggedIn) {
-            Text("Login Successful!")
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        // Or login with
-        Text(stringResource(Res.string.or_login_with), color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
-        Spacer(modifier = Modifier.height(12.dp))
-        // Social Buttons Row
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            IconButton(onClick = { viewModel.onEvent(LoginUiEvent.OnFacebookLoginClick) }, enabled = !state.loading) {
-                Icon(
-                    painter = painterResource(Res.drawable.facebook),
-                    contentDescription = stringResource(Res.string.facebook),
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(40.dp)
-                )
+    LaunchedEffect(viewModel.uiState) {
+        viewModel.uiState.filter { it.isLoggedIn }
+            .collect {
+                showToast("Logged In")
+                navController.toBooking()
             }
-            GoogleButtonUiContainer(onGoogleSignInResult = { googleUser ->
-                showToast("Sign In COmpleted $googleUser")
-            }) {
-                IconButton(onClick = { this.onClick() }, enabled = !state.loading) {
+    }
+
+    fun onReceiveOAuth(result: Result<GoogleUser?>) {
+        result.onFailure {
+            showToast(it.message ?: "Failed")
+        }.onSuccess {
+            viewModel.onEvent(LoginUiEvent.OnOAuthTokenReceived(it))
+        }
+    }
+
+    Scaffold {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Illustration/Image
+            Image(
+                painter = painterResource(Res.drawable.logo_bml),
+                contentDescription = stringResource(Res.string.login_illustration),
+                modifier = Modifier.size(150.dp),
+            )
+
+            Text(
+                stringResource(Res.string.app_name), fontFamily = FontFamily(
+                    Font(
+                        resource = Res.font.stallion_beatsides_regular,
+                        weight = FontWeight.Normal,
+                        style = FontStyle.Normal
+                    )
+                ),
+                color = MaterialTheme.colorScheme.background,
+                fontSize = 58.sp
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+            if (state.loading) {
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            if (state.error.isNotEmpty()) {
+                Text(state.error, color = Color.Red)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            if (state.isLoggedIn) {
+                Text("Login Successful!")
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            // Or login with
+            Text(
+                stringResource(Res.string.or_login_with),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            // Social Buttons Row
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                IconButton(
+                    onClick = { viewModel.onEvent(LoginUiEvent.OnFacebookLoginClick) },
+                    enabled = !state.loading
+                ) {
                     Icon(
-                        painter = painterResource(Res.drawable.google),
-                        contentDescription = stringResource(Res.string.google),
+                        painter = painterResource(Res.drawable.facebook),
+                        contentDescription = stringResource(Res.string.facebook),
                         tint = Color.Unspecified,
                         modifier = Modifier.size(40.dp)
                     )
                 }
+                GoogleButtonUiContainer(onGoogleSignInResult = ::onReceiveOAuth) {
+                    IconButton(onClick = { this.onClick() }, enabled = !state.loading) {
+                        Icon(
+                            painter = painterResource(Res.drawable.google),
+                            contentDescription = stringResource(Res.string.google),
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                }
             }
-
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        // Sign up prompt
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(stringResource(Res.string.dont_have_account) + " ")
-            TextButton(onClick = { /* Handle sign up */ }) {
-                Text(stringResource(Res.string.sign_up))
-            }
-        }
-    }
-}
-
-
-interface GoogleButtonUiContainerScope {
-    fun onClick()
-}
-
-@Composable
-fun GoogleButtonUiContainer(
-    modifier: Modifier = Modifier,
-    onGoogleSignInResult: (String?) -> Unit,
-    content: @Composable GoogleButtonUiContainerScope.() -> Unit,
-) {
-    val googleAuthProvider = koinInject<GoogleAuthProvider>()
-    val googleAuthUiProvider = googleAuthProvider.getUiProvider()
-    val coroutineScope = rememberCoroutineScope()
-    val uiContainerScope = remember {
-        object : GoogleButtonUiContainerScope {
-            override fun onClick() {
-                coroutineScope.launch {
-                    val googleUser = googleAuthUiProvider.login()
-                    onGoogleSignInResult(googleUser)
+            Spacer(modifier = Modifier.height(24.dp))
+            // Sign up prompt
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(stringResource(Res.string.dont_have_account) + " ")
+                TextButton(onClick = { /* Handle sign up */ }) {
+                    Text(stringResource(Res.string.sign_up))
                 }
             }
         }
     }
-    Surface(
-        modifier = modifier,
-        content = { uiContainerScope.content() }
-    )
 }

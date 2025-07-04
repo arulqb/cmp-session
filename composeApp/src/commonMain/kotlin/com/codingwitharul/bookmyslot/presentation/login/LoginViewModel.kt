@@ -5,15 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.codingwitharul.bookmyslot.common.auth.GoogleAuthProvider
 import com.codingwitharul.bookmyslot.common.auth.GoogleAuthenticator
 import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
-import com.codingwitharul.bookmyslot.data.model.UserInfo
+import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
-
-
-// UI Events
-
 
 class LoginViewModel(private val authRepo: AuthRepo) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -30,11 +25,15 @@ class LoginViewModel(private val authRepo: AuthRepo) : ViewModel() {
             is LoginUiEvent.OnOAuthTokenReceived -> {
                 _uiState.value = _uiState.value.copy(loading = true, error = "")
                 viewModelScope.launch {
-                    val result = authRepo.loginWithOAuthOnServer(event.provider, event.token)
-                    if (result.isSuccess) {
-                        _uiState.value = _uiState.value.copy(loading = false, isLoggedIn = true, userInfo = result.getOrNull())
+                    if (event.data != null) {
+                        val result = authRepo.loginWithOAuthOnServer(event.data)
+                        if (result.isSuccess) {
+                            _uiState.value = _uiState.value.copy(loading = false, isLoggedIn = true, userInfo = result.getOrNull())
+                        } else {
+                            _uiState.value = _uiState.value.copy(loading = false, error = result.exceptionOrNull()?.message ?: "Server login failed")
+                        }
                     } else {
-                        _uiState.value = _uiState.value.copy(loading = false, error = result.exceptionOrNull()?.message ?: "Server login failed")
+                        _uiState.value = _uiState.value.copy(loading = false, error = "Google login failed")
                     }
                 }
             }

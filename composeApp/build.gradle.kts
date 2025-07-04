@@ -103,6 +103,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.encoding)
+            implementation(libs.ktor.client.auth)
 //            DB
             implementation(libs.sqdelight.coroutine)
 //            koin
@@ -111,6 +112,8 @@ kotlin {
             implementation(libs.koin.compose.viewmodel.navigation)
 //            3rd party
             implementation(libs.cmptoast)
+            // logging
+            implementation(libs.napier)
 //            coil for image
 //            implementation(libs.coil.compose)
 //            implementation(libs.coil.network.ktor)

@@ -9,6 +9,7 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.NoCredentialException
+import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.FirebaseApp
@@ -21,7 +22,7 @@ actual class GoogleAuthenticator(
     private val credentialManager: CredentialManager
 ) {
 
-    actual suspend fun login(): String? {
+    actual suspend fun login(): Result<GoogleUser?> {
         try {
             val googleIdOption = GetGoogleIdOption.Builder()
                 .setServerClientId("520863704996-ovcrdlchfn3uimu8ddojcnh5hc678q6j.apps.googleusercontent.com")
@@ -35,24 +36,34 @@ actual class GoogleAuthenticator(
             val result = credentialManager.getCredential(context, request)
             val credential = result.credential
             if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                val idToken = googleIdTokenCredential.idToken
-                return idToken
+                val cred = GoogleIdTokenCredential.createFrom(credential.data)
+                val idToken = cred.idToken
+
+                return Result.success(GoogleUser(
+                    name = cred.displayName,
+                    phoneNumber = cred.phoneNumber,
+                    profilePictureUrl = cred.profilePictureUri.toString(),
+                    token = idToken
+                ))
 //                val authCredential = GoogleAuthProvider.getCredential(idToken, null)
 //                val fireBase = FirebaseAuth.getInstance()
 //                val user = fireBase.signInWithCredential(authCredential).await().user
 //                return user?.displayName.toString()
             }
-            return "SOmething went wrong"
+            return Result.failure("No Google ID token found".toThrowable())
         } catch (e: NoCredentialException) {
             e.printStackTrace()
-            return "No email found in your device"
+            return Result.failure("No email found in your device".toThrowable())
         } catch (e: GetCredentialException) {
             e.printStackTrace()
-            return "GetCredentialException"
+            return Result.failure("GetCredentialException".toThrowable())
         } catch (e: Exception) {
-            return e.message.toString()
+            return Result.failure(e.message.toString().toThrowable())
         }
     }
 
+}
+
+private fun String.toThrowable(): Throwable {
+    return Exception(this)
 }

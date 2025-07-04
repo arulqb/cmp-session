@@ -1,0 +1,109 @@
+import kotlin.Boolean;
+
+CREATE TABLE UserInfo (
+    userId TEXT PRIMARY KEY NOT NULL,          -- Unique identifier for the user (e.g., Firebase UID)
+    userName TEXT,                             -- Display name, can be updated by the user
+    email TEXT UNIQUE,                         -- Email address, often used for login and communication, should be unique
+    phoneNumber TEXT UNIQUE,                   -- Phone number, potentially unique if used for login/verification
+    photoUri TEXT,                             -- URI/URL to the user's profile photo
+    authToken TEXT,                            -- Authentication token (e.g., Firebase ID token, session token)
+                                               -- Note: Storing auth tokens requires careful security considerations.
+                                               -- Often, tokens are kept in memory or secure storage, not directly in a general user DB.
+                                               -- If this is a short-lived session token, it might be okay.
+    providerId TEXT,                           -- Authentication provider (e.g., "google.com", "facebook.com", "password")
+    displayName TEXT,
+    bio TEXT,                                  -- A short biography or status for the user
+    dateOfBirth TEXT,                          -- Store as ISO8601 string ("YYYY-MM-DD")
+    lastLoginAt INTEGER,                       -- Timestamp of the last login (Unix epoch milliseconds)
+    isLoggedIn INTEGER AS Boolean NOT NULL DEFAULT 0,
+    createdAt INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000), -- Timestamp of creation (Unix epoch milliseconds)
+    updatedAt INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)  -- Timestamp of the last update (Unix epoch milliseconds)
+);
+
+insertUser:
+INSERT OR REPLACE INTO UserInfo (
+    userId,
+    userName,
+    email,
+    phoneNumber,
+    photoUri,
+    authToken,
+    providerId,
+    displayName,
+    bio,
+    dateOfBirth,
+    lastLoginAt,
+    isLoggedIn
+    -- createdAt and updatedAt have defaults or are handled by triggers
+) VALUES (?,  ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?);
+
+-- If you want createdAt and updatedAt to be explicitly set sometimes,
+-- or to update them without relying solely on the trigger for updatedAt:
+insertOrUpdateUserWithTimestamps:
+INSERT OR REPLACE INTO UserInfo (
+    userId,
+    userName,
+    email,
+    phoneNumber,
+    photoUri,
+    authToken,
+    providerId,
+    displayName,
+    bio,
+    dateOfBirth,
+    lastLoginAt,
+    isLoggedIn,
+    createdAt,
+    updatedAt
+) VALUES (  ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+
+-- READ Operations
+getUserById:
+SELECT * FROM UserInfo
+WHERE userId = ?;
+
+getLoggedInUser:
+SELECT * FROM UserInfo
+WHERE isLoggedIn = 1;
+
+getUserByEmail:
+SELECT * FROM UserInfo
+WHERE email = ?;
+
+getAllUsers:
+SELECT * FROM UserInfo
+ORDER BY createdAt DESC;
+
+-- UPDATE Operations
+
+-- Update specific fields for a user
+updateUserProfile:
+UPDATE UserInfo
+SET userName = ?,
+    displayName = ?,
+    bio = ?,
+    photoUri = ?,
+    dateOfBirth = ?
+    -- updatedAt will be handled by the trigger
+WHERE userId = ?;
+
+updateUserAuthToken:
+UPDATE UserInfo
+SET authToken = ?
+    -- updatedAt will be handled by the trigger
+WHERE userId = ?;
+
+updateLastLogin:
+UPDATE UserInfo
+SET lastLoginAt = ?
+    -- updatedAt will be handled by the trigger
+WHERE userId = ?;
+
+-- DELETE Operation
+deleteUserById:
+DELETE FROM UserInfo
+WHERE userId = ?;
+
+deleteAllUsers:
+DELETE FROM UserInfo;

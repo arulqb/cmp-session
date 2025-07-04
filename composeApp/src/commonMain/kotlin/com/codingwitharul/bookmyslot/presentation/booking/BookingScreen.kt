@@ -31,97 +31,102 @@ fun BookingScreen() {
     LaunchedEffect(Unit) {
 
     }
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
-        Text("Book a Service", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-        // Horizontal date picker
-        Row(
-            modifier = Modifier
-                .horizontalScroll(rememberScrollState())
-                .fillMaxWidth()
+    Scaffold {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(it)
         ) {
-            state.availableDates.map { date ->
-                val isSelected = date == state.selectedDate
-                val hasSlots = true // Stub: assume all days have slots
-                Column(
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .clickable { viewModel.onEvent(BookingUiEvent.SelectDate(date)) }
-                        .background(
-                            if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                            else if (hasSlots) Color.LightGray.copy(alpha = 0.2f)
-                            else Color.Transparent
-                        )
-                        .padding(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        // Use ISO format or custom formatting if needed
-                        date.toString(),
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Unspecified
-                    )
-                    if (hasSlots) {
-                        Box(
-                            Modifier
-                                .size(8.dp)
-                                .background(Color.Green, shape = MaterialTheme.shapes.small)
-                        )
-                    }
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        // Time slots for selected date
-        if (state.selectedDate != null) {
-            Text("Available Time Slots", style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
+            Text("Book a Service", style = MaterialTheme.typography.headlineMedium)
+            Spacer(modifier = Modifier.height(16.dp))
+            // Horizontal date picker
             Row(
-                modifier = Modifier.horizontalScroll(rememberScrollState())
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .fillMaxWidth()
             ) {
-                state.availableTimeSlots.forEach { slot ->
-                    val isSelected = slot == state.selectedTimeSlot
-                    Button(
-                        onClick = { viewModel.onEvent(BookingUiEvent.SelectTimeSlot(slot)) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.LightGray
-                        ),
-                        modifier = Modifier.padding(end = 8.dp)
+                state.availableDates.map { date ->
+                    val isSelected = date == state.selectedDate
+                    val hasSlots = true // Stub: assume all days have slots
+                    Column(
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .clickable { viewModel.onEvent(BookingUiEvent.SelectDate(date)) }
+                            .background(
+                                if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                                else if (hasSlots) Color.LightGray.copy(alpha = 0.2f)
+                                else Color.Transparent
+                            )
+                            .padding(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(slot, color = if (isSelected) Color.White else Color.Black)
+                        Text(
+                            // Use ISO format or custom formatting if needed
+                            date.toString(),
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Unspecified
+                        )
+                        if (hasSlots) {
+                            Box(
+                                Modifier
+                                    .size(8.dp)
+                                    .background(Color.Green, shape = MaterialTheme.shapes.small)
+                            )
+                        }
                     }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = { viewModel.onEvent(BookingUiEvent.BookSelectedSlot) },
-                enabled = state.selectedTimeSlot != null
-            ) {
-                Text("Book Now")
+            // Time slots for selected date
+            if (state.selectedDate != null) {
+                Text("Available Time Slots", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.horizontalScroll(rememberScrollState())
+                ) {
+                    state.availableTimeSlots.forEach { slot ->
+                        val isSelected = slot == state.selectedTimeSlot
+                        Button(
+                            onClick = { viewModel.onEvent(BookingUiEvent.SelectTimeSlot(slot)) },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.LightGray
+                            ),
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text(slot, color = if (isSelected) Color.White else Color.Black)
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { viewModel.onEvent(BookingUiEvent.BookSelectedSlot) },
+                    enabled = state.selectedTimeSlot != null
+                ) {
+                    Text("Book Now")
+                }
             }
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        Divider()
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Your Bookings", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-        if (state.loading) {
-            CircularProgressIndicator()
-        } else if (state.error.isNotEmpty()) {
-            Text(state.error, color = MaterialTheme.colorScheme.error)
-        } else {
-            LazyColumn {
-                items(state.bookings) { booking ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                        onClick = { viewModel.onEvent(BookingUiEvent.SelectBooking(booking)) }
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(booking.service.name, style = MaterialTheme.typography.titleMedium)
-                            Text("${booking.date} - ${booking.timeSlot}")
-                            Text(booking.status.name)
+            Spacer(modifier = Modifier.height(24.dp))
+            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Your Bookings", style = MaterialTheme.typography.titleMedium)
+            Spacer(modifier = Modifier.height(8.dp))
+            if (state.loading) {
+                CircularProgressIndicator()
+            } else if (state.error.isNotEmpty()) {
+                Text(state.error, color = MaterialTheme.colorScheme.error)
+            } else {
+                LazyColumn {
+                    items(state.bookings) { booking ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            onClick = { viewModel.onEvent(BookingUiEvent.SelectBooking(booking)) }
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    booking.service.name,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text("${booking.date} - ${booking.timeSlot}")
+                                Text(booking.status.name)
+                            }
                         }
                     }
                 }

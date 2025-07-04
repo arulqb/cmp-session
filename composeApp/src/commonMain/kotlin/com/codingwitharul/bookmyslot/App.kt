@@ -25,13 +25,3 @@ fun App(koinAppDeclaration: KoinAppDeclaration? = null) {
         }
     }
 }
-
-// Part 2
-// File picker
-// Write file
-// IOS - android Library Dependency
-// VPN - ROOT (Android)
-// SMS
-// Network
-// Wifi
-// Permission Location + Blutooth etc

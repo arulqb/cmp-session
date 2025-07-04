@@ -3,6 +3,7 @@ package com.codingwitharul.bookmyslot.common.auth
 import cocoapods.FirebaseAuth.FIRAuth
 import cocoapods.FirebaseAuth.FIRGoogleAuthProvider
 import cocoapods.GoogleSignIn.GIDSignIn
+import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.UIApplication
 import kotlin.coroutines.Continuation
@@ -12,7 +13,7 @@ import kotlin.coroutines.suspendCoroutine
 actual class GoogleAuthenticator {
 
     @OptIn(ExperimentalForeignApi::class)
-    actual suspend fun login() = suspendCoroutine<String?> { continuation ->
+    actual suspend fun login() = suspendCoroutine<Result<GoogleUser?>> { continuation ->
 
         val rootUiView = UIApplication.sharedApplication
             .keyWindow?.rootViewController

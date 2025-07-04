@@ -1,6 +1,6 @@
 package com.codingwitharul.bookmyslot.presentation.login
 
-import com.codingwitharul.bookmyslot.data.model.UserInfo
+import com.codingwitharul.bookmyslot.db.UserInfo
 
 // UI State
 data class LoginUiState(
