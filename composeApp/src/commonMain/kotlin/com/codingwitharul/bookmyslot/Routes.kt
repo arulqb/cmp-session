@@ -2,14 +2,13 @@ package com.codingwitharul.bookmyslot
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.codingwitharul.bookmyslot.presentation.booking.BookingScreen
-import com.codingwitharul.bookmyslot.presentation.login.LoginScreen
-import com.codingwitharul.bookmyslot.presentation.pokedex.PokedexScreen
-import com.codingwitharul.bookmyslot.presentation.splash.SplashScreen
+import com.codingwitharul.bookmyslot.presentation.ui.booking.BookingScreen
+import com.codingwitharul.bookmyslot.presentation.ui.login.LoginScreen
+import com.codingwitharul.bookmyslot.presentation.ui.pokedex.PokedexScreen
+import com.codingwitharul.bookmyslot.presentation.ui.splash.SplashScreen
 
 @Composable
 fun Router() {
@@ -46,6 +45,7 @@ fun NavController.toBooking(popUpToRoute: AppRoutes? = AppRoutes.Booking, inclus
                 inclusive = inclusiveRoute
             }
         }
+        launchSingleTop = true
     }
 }
 
@@ -56,5 +56,6 @@ fun NavController.toLogin(popUpToRoute: AppRoutes? = AppRoutes.Login, inclusiveR
                 inclusive = inclusiveRoute
             }
         }
+        launchSingleTop = true
     }
 }

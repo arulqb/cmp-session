@@ -1,4 +1,4 @@
-package com.codingwitharul.bookmyslot.presentation.pokedex
+package com.codingwitharul.bookmyslot.presentation.ui.pokedex
 
 import com.codingwitharul.bookmyslot.domain.model.Pokemon
 

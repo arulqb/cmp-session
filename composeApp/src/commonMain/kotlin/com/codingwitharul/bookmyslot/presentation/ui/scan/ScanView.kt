@@ -1,4 +1,4 @@
-package com.codingwitharul.bookmyslot.presentation.scan
+package com.codingwitharul.bookmyslot.presentation.ui.scan
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable

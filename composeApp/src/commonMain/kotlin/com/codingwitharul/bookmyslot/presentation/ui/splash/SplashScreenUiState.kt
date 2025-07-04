@@ -1,4 +1,4 @@
-package com.codingwitharul.bookmyslot.presentation.splash
+package com.codingwitharul.bookmyslot.presentation.ui.splash
 
 import com.codingwitharul.bookmyslot.db.UserInfo
 

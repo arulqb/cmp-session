@@ -12,14 +12,9 @@ import com.codingwitharul.bookmyslot.db.UserInfo
 import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
 import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import com.codingwitharul.bookmyslot.utils.toThrowable
-import io.github.aakira.napier.Napier
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpMethod
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 
 class AuthRepoImpl(val db: DatabaseHelper, val apiClientHelper: ApiClientHelper) : AuthRepo {
 
@@ -47,7 +42,7 @@ class AuthRepoImpl(val db: DatabaseHelper, val apiClientHelper: ApiClientHelper)
                 val data = resp.body
                 val now = Clock.System.now().epochSeconds
                 val userInfo = UserInfo(
-                    userId = "",
+                    userId = data.uid,
                     userName = data.name,
                     email = data.email,
                     phoneNumber = data.phoneNumber,

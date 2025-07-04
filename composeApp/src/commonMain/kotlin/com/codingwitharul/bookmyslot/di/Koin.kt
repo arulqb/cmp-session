@@ -2,20 +2,20 @@ package com.codingwitharul.bookmyslot.di
 
 
 import com.codingwitharul.bookmyslot.common.DriverFactory
-import com.codingwitharul.bookmyslot.data.repo.PokemonRepositoryImpl
-import com.codingwitharul.bookmyslot.data.repo.AuthRepoImpl
-import com.codingwitharul.bookmyslot.db.BookMySlot
 import com.codingwitharul.bookmyslot.data.db.DatabaseHelper
-import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
-import com.codingwitharul.bookmyslot.domain.repo.PokemonRepo
 import com.codingwitharul.bookmyslot.data.networking.ApiClientHelper
+import com.codingwitharul.bookmyslot.data.repo.AuthRepoImpl
 import com.codingwitharul.bookmyslot.data.repo.BookingRepoImpl
+import com.codingwitharul.bookmyslot.data.repo.PokemonRepositoryImpl
+import com.codingwitharul.bookmyslot.db.BookMySlot
+import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
 import com.codingwitharul.bookmyslot.domain.repo.BookingRepo
+import com.codingwitharul.bookmyslot.domain.repo.PokemonRepo
 import com.codingwitharul.bookmyslot.domain.usecase.LoginUseCase
-import com.codingwitharul.bookmyslot.presentation.booking.BookingViewModel
-import com.codingwitharul.bookmyslot.presentation.login.LoginViewModel
-import com.codingwitharul.bookmyslot.presentation.pokedex.PokedexViewModel
-import com.codingwitharul.bookmyslot.presentation.splash.SplashScreenViewModel
+import com.codingwitharul.bookmyslot.presentation.ui.booking.BookingViewModel
+import com.codingwitharul.bookmyslot.presentation.ui.login.LoginViewModel
+import com.codingwitharul.bookmyslot.presentation.ui.pokedex.PokedexViewModel
+import com.codingwitharul.bookmyslot.presentation.ui.splash.SplashScreenViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module

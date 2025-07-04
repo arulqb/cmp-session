@@ -1,4 +1,4 @@
-package com.codingwitharul.bookmyslot.presentation.login
+package com.codingwitharul.bookmyslot.presentation.ui.login
 
 import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 

@@ -1,11 +1,8 @@
-package com.codingwitharul.bookmyslot.presentation.login
+package com.codingwitharul.bookmyslot.presentation.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codingwitharul.bookmyslot.common.auth.GoogleAuthProvider
-import com.codingwitharul.bookmyslot.common.auth.GoogleAuthenticator
 import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
-import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

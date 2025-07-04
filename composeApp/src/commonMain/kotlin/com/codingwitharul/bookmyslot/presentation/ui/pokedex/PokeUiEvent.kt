@@ -1,4 +1,4 @@
-package com.codingwitharul.bookmyslot.presentation.pokedex
+package com.codingwitharul.bookmyslot.presentation.ui.pokedex
 
 sealed class PokeUiEvent {
     data object GetPokemonList: PokeUiEvent()

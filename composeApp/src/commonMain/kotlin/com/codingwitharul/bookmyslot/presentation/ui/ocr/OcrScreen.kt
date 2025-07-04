@@ -1,4 +1,4 @@
-package com.codingwitharul.bookmyslot.presentation.ocr
+package com.codingwitharul.bookmyslot.presentation.ui.ocr
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

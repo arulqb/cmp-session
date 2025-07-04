@@ -1,7 +1,6 @@
-package com.codingwitharul.bookmyslot.presentation.booking
+package com.codingwitharul.bookmyslot.presentation.ui.booking
 
 import com.codingwitharul.bookmyslot.domain.model.Booking
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 data class BookingUiState(
