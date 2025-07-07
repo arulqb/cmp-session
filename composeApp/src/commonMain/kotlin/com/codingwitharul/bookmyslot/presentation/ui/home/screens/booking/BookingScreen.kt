@@ -1,4 +1,4 @@
-package com.codingwitharul.bookmyslot.presentation.ui.booking
+package com.codingwitharul.bookmyslot.presentation.ui.home.screens.booking
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,6 +36,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import bookmyslot.composeapp.generated.resources.Res
+import bookmyslot.composeapp.generated.resources.logo_bml
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -54,7 +58,14 @@ fun BookingScreen() {
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 titleContentColor = Color.White
-            )
+            ),
+            actions = {
+                Icon(
+                    painter = painterResource(Res.drawable.logo_bml),
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
         )
     }) { paddingValues ->
         Box(

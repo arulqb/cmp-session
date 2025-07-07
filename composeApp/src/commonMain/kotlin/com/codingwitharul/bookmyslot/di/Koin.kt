@@ -12,7 +12,7 @@ import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
 import com.codingwitharul.bookmyslot.domain.repo.BookingRepo
 import com.codingwitharul.bookmyslot.domain.repo.PokemonRepo
 import com.codingwitharul.bookmyslot.domain.usecase.LoginUseCase
-import com.codingwitharul.bookmyslot.presentation.ui.booking.BookingViewModel
+import com.codingwitharul.bookmyslot.presentation.ui.home.screens.booking.BookingViewModel
 import com.codingwitharul.bookmyslot.presentation.ui.login.LoginViewModel
 import com.codingwitharul.bookmyslot.presentation.ui.pokedex.PokedexViewModel
 import com.codingwitharul.bookmyslot.presentation.ui.splash.SplashScreenViewModel

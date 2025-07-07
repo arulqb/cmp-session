@@ -90,8 +90,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.lifecycle.viewmodel)
-            implementation(libs.lifecycle.viewmodel.compose)
 
 //            Moko
             api(libs.moko.permissions)
@@ -117,7 +115,8 @@ kotlin {
 //            coil for image
 //            implementation(libs.coil.compose)
 //            implementation(libs.coil.network.ktor)
-//            api(libs.gitlive.firebase.kotlin.crashlytics)
+
+            implementation(libs.adaptive)
         }
 
         jsMain.dependencies {

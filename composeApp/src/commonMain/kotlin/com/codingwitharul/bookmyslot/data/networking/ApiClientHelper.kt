@@ -2,8 +2,8 @@ package com.codingwitharul.bookmyslot.data.networking
 
 import com.codingwitharul.bookmyslot.common.httpClient
 import com.codingwitharul.bookmyslot.data.db.DatabaseHelper
-import com.codingwitharul.bookmyslot.db.UserInfo
 import com.codingwitharul.bookmyslot.data.networking.models.ApiResponse
+import com.codingwitharul.bookmyslot.db.UserInfo
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -16,13 +16,11 @@ import io.ktor.client.plugins.auth.providers.BearerAuthConfig
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.bearerAuth
-import io.ktor.client.request.header
 import io.ktor.client.request.headers
 import io.ktor.client.request.request
 import io.ktor.client.request.url
@@ -35,25 +33,14 @@ import kotlinx.serialization.json.Json
 
 class ApiClientHelper(val db: DatabaseHelper) {
 
+    var client: HttpClient = createClient()
 
-    var client: HttpClient
-
-    init {
-        client = createClient(null)
-    }
-
-    fun authClient(userInfo: UserInfo) {
-        client = createClient(userInfo)
-    }
-
-    fun createClient(userInfo: UserInfo?): HttpClient {
-
+    fun createClient(): HttpClient {
         return httpClient {
             install(HttpTimeout) {
                 socketTimeoutMillis = 60_000
                 requestTimeoutMillis = 60_000
             }
-
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
@@ -62,11 +49,10 @@ class ApiClientHelper(val db: DatabaseHelper) {
                 }
                 level = LogLevel.ALL
             }
-
             install(Auth) {
-                userInfo?.let {
+                db.getActiveUserInfo()?.let {
                     bearer {
-                        setupAuth(userInfo, db)
+                        setupAuth(it, db)
                     }
                 }
             }
@@ -127,10 +113,6 @@ suspend inline fun <reified T, reified E> HttpClient.safeRequest(
     block: HttpRequestBuilder.() -> Unit,
 ): ApiResponse<T, E> {
     return try {
-//        if (Utils.hasInternetConnection?.invoke() == false) {
-//            Napier.e(tag = "ApiCall", message = "No internet connection.")
-//            return ApiResponse.Error.NetworkError
-//        }
         val response = request { block() }
         ApiResponse.Success(response.body())
     } catch (e: ClientRequestException) {

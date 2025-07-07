@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import bookmyslot.composeapp.generated.resources.Res
 import bookmyslot.composeapp.generated.resources.app_name
 import bookmyslot.composeapp.generated.resources.dont_have_account
@@ -41,7 +40,6 @@ import bookmyslot.composeapp.generated.resources.sign_up
 import bookmyslot.composeapp.generated.resources.stallion_beatsides_regular
 import com.codingwitharul.bookmyslot.presentation.components.GoogleButtonUiContainer
 import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
-import com.codingwitharul.bookmyslot.toBooking
 import kotlinx.coroutines.flow.filter
 import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.Font
@@ -52,7 +50,7 @@ import org.koin.compose.koinInject
 
 @Preview
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(onLoginSuccess: () -> Unit) {
     val viewModel: LoginViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
 
@@ -60,7 +58,7 @@ fun LoginScreen(navController: NavController) {
         viewModel.uiState.filter { it.isLoggedIn }
             .collect {
                 showToast("Logged In")
-                navController.toBooking()
+                onLoginSuccess()
             }
     }
 
