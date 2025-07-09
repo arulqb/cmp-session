@@ -11,7 +11,6 @@ import org.koin.dsl.module
 
 actual val platformModule: Module = module {
     single<DriverFactory> { DriverFactory(androidContext()) } // Provide Android Context
-    factory<GoogleAuthProvider> { GoogleAuthProvider() }
     factory<CredentialManager> { CredentialManager.create(androidContext()) } bind CredentialManager::class
     factoryOf(::GoogleAuthProvider) bind GoogleAuthProvider::class
 }

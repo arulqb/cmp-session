@@ -7,15 +7,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +38,6 @@ import bookmyslot.composeapp.generated.resources.facebook
 import bookmyslot.composeapp.generated.resources.google
 import bookmyslot.composeapp.generated.resources.login_illustration
 import bookmyslot.composeapp.generated.resources.logo_bml
-import bookmyslot.composeapp.generated.resources.or_login_with
 import bookmyslot.composeapp.generated.resources.sign_up
 import bookmyslot.composeapp.generated.resources.stallion_beatsides_regular
 import com.codingwitharul.bookmyslot.presentation.components.GoogleButtonUiContainer
@@ -48,6 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun LoginScreen(onLoginSuccess: () -> Unit) {
@@ -70,11 +73,18 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
         }
     }
 
-    Scaffold {
+    Scaffold(topBar = {
+        TopAppBar(
+            title = { },
+            colors = TopAppBarDefaults.topAppBarColors(
+                titleContentColor = Color.Black,
+                containerColor = Color.White
+            )
+        )
+    }) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -82,6 +92,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             Image(
                 painter = painterResource(Res.drawable.logo_bml),
                 contentDescription = stringResource(Res.string.login_illustration),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                 modifier = Modifier.size(150.dp),
             )
 
@@ -93,7 +104,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                         style = FontStyle.Normal
                     )
                 ),
-                color = MaterialTheme.colorScheme.background,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 58.sp
             )
 
@@ -110,13 +121,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                 Text("Login Successful!")
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            // Or login with
-            Text(
-                stringResource(Res.string.or_login_with),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-            )
             Spacer(modifier = Modifier.height(12.dp))
-            // Social Buttons Row
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
