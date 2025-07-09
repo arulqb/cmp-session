@@ -47,7 +47,7 @@ fun HomeScreen(windowSizeClass: WindowSizeClass) {
                 }
             )
         }) {
-        Box(modifier = Modifier.padding(it)) {
+        Box(Modifier.padding(bottom = it.calculateBottomPadding())) {
             NavHost(
                 navController = navController,
                 startDestination = BottomBarScreen.Discover.route

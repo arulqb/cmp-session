@@ -2,7 +2,6 @@ package com.codingwitharul.bookmyslot.presentation.ui.home.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,10 +24,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,18 +38,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import bookmyslot.composeapp.generated.resources.Res
-import bookmyslot.composeapp.generated.resources.bell
 import bookmyslot.composeapp.generated.resources.logo_bml
+import com.codingwitharul.bookmyslot.presentation.components.AppTopAppBar
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
 @Composable
 fun DiscoverScreen() {
-    Surface {
-        Column(modifier = Modifier) {
-            HomeToolbar()
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
+    Scaffold(topBar = {
+        AppTopAppBar("Discover") {
+            Icon(
+                painter = painterResource(Res.drawable.logo_bml),
+                modifier = Modifier.size(32.dp),
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+    }) {
+        Column(modifier = Modifier.padding(it)) {
+            LazyColumn(modifier = Modifier.fillMaxSize().padding(top = 8.dp, bottom = 16.dp)) {
                 item {
                     Card(
                         modifier = Modifier
@@ -71,13 +78,11 @@ fun DiscoverScreen() {
                 }
 
                 item {
-                    Text(
-                        "Services",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                        CategoryTitle("Services", "View All") {
+
+                        }
+                    }
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.padding(start = 8.dp)
@@ -91,12 +96,9 @@ fun DiscoverScreen() {
 
                 item {
                     Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-                        Text(
-                            "Popular Products",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        CategoryTitle("Popular Products", "View All") {
+
+                        }
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(2),
                             modifier = Modifier.fillMaxWidth()
@@ -118,44 +120,25 @@ fun DiscoverScreen() {
 }
 
 @Composable
-fun HomeToolbar() {
+fun CategoryTitle(title: String, viewAllText: String, onViewAllClick: () -> Unit) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().height(60.dp)
-            .padding(horizontal = 6.dp, vertical = 4.dp)
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            "BookMySlot", style = MaterialTheme.typography.titleLarge,
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.End) {
-
-            IconButton(onClick = {
-
-            }) {
-                Icon(
-                    painter = painterResource(Res.drawable.bell),
-                    tint = Color.Black,
-                    contentDescription = "Notification"
-                )
-            }
-            Box(
-                modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .clickable {
-
-                }
-                .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                // Replace with your service icon or image
-                Image(
-                    painter = painterResource(Res.drawable.logo_bml),
-                    contentDescription = "Service Icon",
-                    modifier = Modifier.size(40.dp)
-                )
-            }
+        TextButton(
+            onClick = onViewAllClick
+        ) {
+            Text(
+                text = viewAllText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

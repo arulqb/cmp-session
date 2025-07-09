@@ -66,10 +66,10 @@ internal fun SplashScreen(onNavigate: (userInfo: UserInfo?) -> Unit = {}) {
     var splashAnime by remember { mutableStateOf(true) }
 
     LaunchedEffect(viewModel.uiState) {
-        delay(1000)
+        delay(600)
         splashAnime = false
-        delay(1000)
-        viewModel.uiState.filter { it.loading == false }.collect {
+        delay(700)
+        viewModel.uiState.filter { !it.loading }.collect {
             onNavigate(state.userInfo)
         }
     }
@@ -109,7 +109,7 @@ internal fun SplashScreen(onNavigate: (userInfo: UserInfo?) -> Unit = {}) {
                 exit = fadeOut(animationSpec = tween(durationMillis = 1500))
             ) {
                 val widthAnim =
-                    animateDpAsState(targetValue = 200.dp)
+                    animateDpAsState(targetValue = 230.dp)
                 val heightAnim =
                     animateDpAsState(targetValue = 200.dp)
 

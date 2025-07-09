@@ -22,11 +22,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,7 +36,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import bookmyslot.composeapp.generated.resources.Res
-import bookmyslot.composeapp.generated.resources.logo_bml
+import bookmyslot.composeapp.generated.resources.bell
+import com.codingwitharul.bookmyslot.presentation.components.AppTopAppBar
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
@@ -53,20 +53,19 @@ fun BookingScreen() {
 
     }
     Scaffold(topBar = {
-        TopAppBar(
-            title = { Text("Booking") },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = Color.White
-            ),
-            actions = {
+        AppTopAppBar(title = "Booking") {
+            IconButton(
+                onClick = {
+
+                }
+            ) {
                 Icon(
-                    painter = painterResource(Res.drawable.logo_bml),
+                    painter = painterResource(Res.drawable.bell),
                     contentDescription = null,
                     tint = Color.White
                 )
             }
-        )
+        }
     }) { paddingValues ->
         Box(
             modifier = Modifier
