@@ -38,13 +38,13 @@ val bottomBarScreens = listOf(
 
 @Composable
 fun AppBottomBar(
-    currentRoute: BottomBarScreen?,
+    currentDestination: String?,
     onItemSelected: (BottomBarScreen) -> Unit
 ) {
     NavigationBar {
         bottomBarScreens.forEach { screen ->
             NavigationBarItem(
-                selected = currentRoute == screen,
+                selected = currentDestination == screen.route,
                 onClick = { onItemSelected(screen) },
                 icon = { Icon(painterResource(screen.icon), contentDescription = screen.title) },
                 label = { Text(screen.title) }
@@ -58,7 +58,7 @@ fun AppBottomBar(
 fun AppBottomBarPreview() {
     var currentRoute by remember { mutableIntStateOf(0) }
     AppBottomBar(
-        currentRoute = bottomBarScreens[currentRoute],
+        currentDestination = bottomBarScreens[currentRoute].route,
         onItemSelected = { route -> currentRoute = bottomBarScreens.indexOfFirst { it == route } }
     )
 }

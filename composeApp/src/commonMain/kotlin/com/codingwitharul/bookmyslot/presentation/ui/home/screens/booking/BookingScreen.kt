@@ -161,7 +161,7 @@ fun BookingScreen() {
                             ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
                                     Text(
-                                        booking.service.name,
+                                        booking.service.services.firstOrNull()?.name ?: "",
                                         style = MaterialTheme.typography.titleMedium
                                     )
                                     Text("${booking.date} - ${booking.timeSlot}")

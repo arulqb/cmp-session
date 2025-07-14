@@ -16,8 +16,8 @@ fun App(
     koinAppDeclaration: KoinAppDeclaration? = null
 ) {
     KoinApplication(application = {
-        koinAppDeclaration?.invoke(this)
         modules(appModule())
+        koinAppDeclaration?.invoke(this)
     }) {
         AppTheme {
             Router(windowSizeClass)

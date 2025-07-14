@@ -20,6 +20,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -44,6 +45,7 @@ import com.codingwitharul.bookmyslot.presentation.components.GoogleButtonUiConta
 import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import kotlinx.coroutines.flow.filter
 import multiplatform.network.cmptoast.showToast
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -53,7 +55,7 @@ import org.koin.compose.koinInject
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit) {
+fun LoginScreen(stateLong: State<Long>, onLoginSuccess: () -> Unit) {
     val viewModel: LoginViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
 
@@ -86,13 +88,12 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             // Illustration/Image
-            Image(
-                painter = painterResource(Res.drawable.logo_bml),
-                contentDescription = stringResource(Res.string.login_illustration),
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+            AppImage(
+                resId = Res.drawable.logo_bml,
                 modifier = Modifier.size(150.dp),
             )
 
@@ -107,6 +108,8 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                 color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 58.sp
             )
+
+
 
             Spacer(modifier = Modifier.height(24.dp))
             if (state.loading) {
@@ -160,4 +163,15 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             }
         }
     }
+}
+
+
+@Composable
+fun AppImage(resId: DrawableResource, modifier: Modifier) {
+    Image(
+        painter = painterResource(Res.drawable.logo_bml),
+        modifier = modifier,
+        contentDescription = stringResource(Res.string.login_illustration),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+    )
 }

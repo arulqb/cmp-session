@@ -92,10 +92,9 @@ kotlin {
             implementation(libs.kotlinx.datetime)
 
 //            Moko
-            api(libs.moko.permissions)
-            api(libs.moko.permissions.compose)
+//            api(libs.moko.permissions)
+//            api(libs.moko.permissions.compose)
 //            Networking
-            implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.kotlinx.json)
@@ -113,10 +112,14 @@ kotlin {
             // logging
             implementation(libs.napier)
 //            coil for image
-//            implementation(libs.coil.compose)
+            implementation(libs.coil.compose)
+            implementation("io.coil-kt.coil3:coil-network-okhttp:3.2.0")
 //            implementation(libs.coil.network.ktor)
 
+//
             implementation(libs.adaptive)
+//          adaptive layout for tablet
+            implementation(libs.androidx.material3.adaptive.navigation.suite)
         }
 
         jsMain.dependencies {

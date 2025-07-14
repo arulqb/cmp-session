@@ -1,0 +1,42 @@
+
+CREATE TABLE Service (
+    internalDbId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    image TEXT NOT NULL,
+    discoverId TEXT NOT NULL, -- Foreign key to link to DiscoverTable
+    FOREIGN KEY (discoverId) REFERENCES Discover(id) ON DELETE CASCADE -- ON DELETE CASCADE will auto-delete services if parent Discover is deleted
+);
+
+-- Index for faster lookups by discoverId
+CREATE INDEX idx_service_discover_id ON Service(discoverId);
+-- Ensure a service ID is unique within a specific discover item
+CREATE UNIQUE INDEX idx_unique_service_per_discover ON Service(id, discoverId);
+
+insertService:
+INSERT INTO Service(id, name, description, image, discoverId)
+VALUES (:id, :name, :description, :image, :discoverId);
+
+getServicesForDiscover:
+SELECT * FROM Service
+WHERE discoverId = :discoverId;
+
+getServiceByInternalDbId: -- If you need to fetch by the DB's own ID
+SELECT * FROM Service
+WHERE internalDbId = :internalDbId;
+
+updateService:
+UPDATE Service
+SET name = :name,
+    description = :description,
+    image = :image
+WHERE internalDbId = :internalDbId; -- Or "WHERE id = :id AND discoverId = :discoverId" if using original IDs
+
+deleteServiceByInternalDbId:
+DELETE FROM Service
+WHERE internalDbId = :internalDbId;
+
+deleteServicesForDiscover: -- To delete all services associated with a discover item
+DELETE FROM Service
+WHERE discoverId = :discoverId;
