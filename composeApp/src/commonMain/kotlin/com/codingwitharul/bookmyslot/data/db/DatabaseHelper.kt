@@ -5,6 +5,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.codingwitharul.bookmyslot.db.BookMySlot
 import com.codingwitharul.bookmyslot.db.Status
 import com.codingwitharul.bookmyslot.db.UserInfo
+import com.codingwitharul.bookmyslot.domain.model.DiscoverModel
 import com.codingwitharul.bookmyslot.domain.model.Pokemon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +15,7 @@ class DatabaseHelper(val database: BookMySlot) {
 
     private val userInfoQueries = database.userInfoQueries
     private val statusQueries = database.statusQueries
+    private val discoverQueries = database.discoverQueries
 
     fun getStatus(): Flow<List<Status>> =
         database.statusQueries.getAllMessages().asFlow()
@@ -47,6 +49,10 @@ class DatabaseHelper(val database: BookMySlot) {
                 isLoggedIn = true
             )
         }
+    }
+
+    fun saveDiscoveries(discoveries: DiscoverModel) {
+
     }
 
     fun getActiveUserInfo():  UserInfo? {

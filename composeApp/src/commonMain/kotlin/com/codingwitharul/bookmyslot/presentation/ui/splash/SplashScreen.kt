@@ -28,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,17 +60,17 @@ import org.koin.compose.koinInject
 
 @Preview
 @Composable
-internal fun SplashScreen(onNavigate: (userInfo: UserInfo?) -> Unit = {}) {
+internal fun SplashScreen(stateLong: State<Long>, onNavigate: (UserInfo?) -> Unit = {}) {
 
     val viewModel: SplashScreenViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
     var splashAnime by remember { mutableStateOf(true) }
 
     LaunchedEffect(viewModel.uiState) {
-        delay(1000)
+        delay(600)
         splashAnime = false
-        delay(1000)
-        viewModel.uiState.filter { it.loading == false }.collect {
+        delay(700)
+        viewModel.uiState.filter { !it.loading }.collect {
             onNavigate(state.userInfo)
         }
     }
@@ -84,7 +85,6 @@ internal fun SplashScreen(onNavigate: (userInfo: UserInfo?) -> Unit = {}) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             AnimatedVisibility(
                 splashAnime,
                 enter = fadeIn(animationSpec = tween(500)),
@@ -109,7 +109,7 @@ internal fun SplashScreen(onNavigate: (userInfo: UserInfo?) -> Unit = {}) {
                 exit = fadeOut(animationSpec = tween(durationMillis = 1500))
             ) {
                 val widthAnim =
-                    animateDpAsState(targetValue = 200.dp)
+                    animateDpAsState(targetValue = 230.dp)
                 val heightAnim =
                     animateDpAsState(targetValue = 200.dp)
 

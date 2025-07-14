@@ -1,4 +1,4 @@
-package com.codingwitharul.bookmyslot.presentation.ui.booking
+package com.codingwitharul.bookmyslot.presentation.ui.home.screens.booking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

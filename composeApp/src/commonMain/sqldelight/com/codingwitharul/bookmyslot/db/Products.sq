@@ -1,0 +1,38 @@
+
+CREATE TABLE ProductTable (
+    internalDbId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id TEXT NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    image TEXT NOT NULL,
+    price REAL NOT NULL,
+    discoverId TEXT NOT NULL,
+    FOREIGN KEY (discoverId) REFERENCES Discover(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_product_discover_id ON ProductTable(discoverId);
+CREATE UNIQUE INDEX idx_unique_product_per_discover ON ProductTable(id, discoverId);
+
+insertProduct:
+INSERT INTO ProductTable(id, name, description, image, price, discoverId)
+VALUES (:id, :name, :description, :image, :price, :discoverId);
+
+getProductsForDiscover:
+SELECT * FROM ProductTable
+WHERE discoverId = :discoverId;
+
+updateProduct:
+UPDATE ProductTable
+SET name = :name,
+    description = :description,
+    image = :image,
+    price = :price
+WHERE internalDbId = :internalDbId;
+
+deleteProductByInternalDbId:
+DELETE FROM ProductTable
+WHERE internalDbId = :internalDbId;
+
+deleteProductsForDiscover:
+DELETE FROM ProductTable
+WHERE discoverId = :discoverId;

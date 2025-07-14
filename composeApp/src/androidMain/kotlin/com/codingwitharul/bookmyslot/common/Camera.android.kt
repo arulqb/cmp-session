@@ -27,7 +27,8 @@ actual fun CameraView() {
         update = {
             val cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build()
-            preview.setSurfaceProvider(previewView.surfaceProvider)
+
+            preview.surfaceProvider = previewView.surfaceProvider
             val cameraSelector =
                 CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK)
                     .build()

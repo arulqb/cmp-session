@@ -1,0 +1,35 @@
+CREATE TABLE OfferTable (
+    internalDbId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id TEXT NOT NULL, -- The original ID from your Offer data class
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    image TEXT NOT NULL,
+    discoverId TEXT NOT NULL,
+    FOREIGN KEY (discoverId) REFERENCES Discover(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_offer_discover_id ON OfferTable(discoverId);
+CREATE UNIQUE INDEX idx_unique_offer_per_discover ON OfferTable(id, discoverId);
+
+insertOffer:
+INSERT INTO OfferTable(id, name, description, image, discoverId)
+VALUES (:id, :name, :description, :image, :discoverId);
+
+getOffersForDiscover:
+SELECT * FROM OfferTable
+WHERE discoverId = :discoverId;
+
+updateOffer:
+UPDATE OfferTable
+SET name = :name,
+    description = :description,
+    image = :image
+WHERE internalDbId = :internalDbId; -- Or based on composite of id and discoverId
+
+deleteOfferByInternalDbId:
+DELETE FROM OfferTable
+WHERE internalDbId = :internalDbId;
+
+deleteOffersForDiscover:
+DELETE FROM OfferTable
+WHERE discoverId = :discoverId;

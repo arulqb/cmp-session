@@ -1,11 +1,11 @@
 package com.codingwitharul.bookmyslot.domain.model
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDateTime
 
 data class Booking(
     val id: String,
-    val service: Service,
-    val date: LocalDate,
+    val service: DiscoverModel,
+    val date: LocalDateTime,
     val timeSlot: String,
     val notes: String,
     val status: BookingStatus

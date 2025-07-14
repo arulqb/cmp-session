@@ -1,0 +1,28 @@
+
+CREATE TABLE Discover(
+    -- id from your Kotlin class is a String (likely a UUID or similar from an API)
+    -- In SQL, if this ID is guaranteed unique from your source, you can use it as PRIMARY KEY.
+    -- If it's not guaranteed unique or you prefer an auto-generated integer ID for the DB:
+    -- internalDbId INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    id TEXT NOT NULL PRIMARY KEY, -- Using the String ID from your data class
+    createdAt TEXT NOT NULL -- Assuming this is an ISO 8601 string or similar
+);
+
+insertDiscover:
+INSERT OR REPLACE INTO Discover(id, createdAt)
+VALUES (:id, :createdAt);
+
+getDiscoverById:
+SELECT * FROM Discover
+WHERE id = :id;
+
+getAllDiscover:
+SELECT * FROM Discover
+ORDER BY createdAt DESC; -- Or any other ordering you prefer
+
+deleteDiscoverById:
+DELETE FROM Discover
+WHERE id = :id;
+
+deleteAllDiscover:
+DELETE FROM Discover;

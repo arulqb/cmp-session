@@ -8,25 +8,15 @@ import com.codingwitharul.bookmyslot.data.networking.models.ApiResponse
 import com.codingwitharul.bookmyslot.data.networking.models.ErrorType
 import com.codingwitharul.bookmyslot.data.networking.models.getErrorData
 import com.codingwitharul.bookmyslot.data.networking.safeRequest
+import com.codingwitharul.bookmyslot.data.toUserInfo
 import com.codingwitharul.bookmyslot.db.UserInfo
 import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
 import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import com.codingwitharul.bookmyslot.utils.toThrowable
 import io.ktor.client.request.setBody
 import io.ktor.http.HttpMethod
-import kotlinx.datetime.Clock
 
 class AuthRepoImpl(val db: DatabaseHelper, val apiClientHelper: ApiClientHelper) : AuthRepo {
-
-    override suspend fun sendVerificationCode(phone: String): Result<String> {
-        // TODO: Implement with Firebase SDK in platform-specific code
-        return Result.failure(NotImplementedError("Platform-specific implementation required"))
-    }
-
-    override suspend fun verifyCode(verificationId: String, code: String): Result<Unit> {
-        // TODO: Implement with Firebase SDK in platform-specific code
-        return Result.failure(NotImplementedError("Platform-specific implementation required"))
-    }
 
     override suspend fun loginWithOAuthOnServer(user: GoogleUser): Result<UserInfo> {
         val resp = apiClientHelper.client.safeRequest<GoogleUser, GoogleUser> {
@@ -39,24 +29,7 @@ class AuthRepoImpl(val db: DatabaseHelper, val apiClientHelper: ApiClientHelper)
                 Result.failure("Error: ${resp.getErrorData(ErrorType.LOGIN)}".toThrowable())
             }
             is ApiResponse.Success<GoogleUser> -> {
-                val data = resp.body
-                val now = Clock.System.now().epochSeconds
-                val userInfo = UserInfo(
-                    userId = data.uid,
-                    userName = data.name,
-                    email = data.email,
-                    phoneNumber = data.phoneNumber,
-                    photoUri = data.profilePictureUrl,
-                    authToken = data.token,
-                    providerId = "google",
-                    displayName = data.name,
-                    bio = null,
-                    dateOfBirth = null,
-                    lastLoginAt = now,
-                    createdAt = now,
-                    updatedAt = now,
-                    isLoggedIn = true
-                )
+                val userInfo = resp.body.toUserInfo()
                 db.saveUserInfo(userInfo)
                 Result.success(userInfo)
             }
@@ -71,4 +44,16 @@ class AuthRepoImpl(val db: DatabaseHelper, val apiClientHelper: ApiClientHelper)
             return Result.success(user)
         }
     }
+
+
+    override suspend fun sendVerificationCode(phone: String): Result<String> {
+        // TODO: Implement with Firebase SDK in platform-specific code
+        return Result.failure(NotImplementedError("Platform-specific implementation required"))
+    }
+
+    override suspend fun verifyCode(verificationId: String, code: String): Result<Unit> {
+        // TODO: Implement with Firebase SDK in platform-specific code
+        return Result.failure(NotImplementedError("Platform-specific implementation required"))
+    }
+
 }
