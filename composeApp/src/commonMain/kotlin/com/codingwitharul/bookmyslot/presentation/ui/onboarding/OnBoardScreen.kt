@@ -16,6 +16,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
 import bookmyslot.composeapp.generated.resources.Res
 import bookmyslot.composeapp.generated.resources.app_name
@@ -41,11 +43,17 @@ import coil3.request.ImageRequest
 import com.codingwitharul.bookmyslot.common.rememberCameraManager
 import com.codingwitharul.bookmyslot.common.rememberGalleryManager
 import com.codingwitharul.bookmyslot.presentation.ui.onboarding.components.ImageCaptureView
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionsController
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.PermissionsControllerFactory
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.io.files.Path
+import multiplatform.network.cmptoast.showToast
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -56,13 +64,23 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun OnBoardScreen(
     windowSizeClass: WindowSizeClass
 ) {
+
+
     var showCamera by remember { mutableStateOf(false) }
     var imagePath by remember { mutableStateOf<Path?>(null) }
     var imageFromPicker by remember { mutableStateOf<ImageBitmap?>(null) }
     val scope = rememberCoroutineScope()
-    fun onOpenCamera() {
-        imagePath = null
-        showCamera = true
+
+//    Permission using Moko
+    val permissionFactory: PermissionsControllerFactory = rememberPermissionsControllerFactory()
+    val permissionController: PermissionsController = remember(permissionFactory) {
+        permissionFactory.createPermissionsController()
+    }
+    BindEffect(permissionController)
+
+//    Moko End
+    val viewModel = viewModel {
+        OnBoardViewModel(permissionController)
     }
 
     val gallery = rememberGalleryManager { result ->
@@ -81,14 +99,65 @@ fun OnBoardScreen(
         }
     }
 
+    fun onOpenCamera() {
+        scope.launch {
+            if (viewModel.isPermissionGranted(Permission.CAMERA).not()) {
+                viewModel.requestPermission(Permission.CAMERA)
+                return@launch
+            }
+            imagePath = null
+            showCamera = true
+        }
+    }
+
     fun onPickFromGallery() {
-        gallery.launch()
+        scope.launch {
+            if (viewModel.isPermissionGranted(Permission.GALLERY).not()) {
+                viewModel.requestPermission(Permission.GALLERY)
+                return@launch
+            }
+            gallery.launch()
+        }
     }
 
     fun onOpenDefaultCamera() {
         cameraManager.launch()
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.state.collect {
+            it.permission?.let { perm ->
+                when (perm) {
+                    Permission.CAMERA -> {
+                        if (it.isGranted) {
+                            onOpenCamera()
+                        } else {
+                            showToast("Permission not granted")
+                        }
+                    }
+
+                    Permission.GALLERY -> {
+                        if (it.isGranted) {
+                            onPickFromGallery()
+                        } else {
+                            showToast("Permission not granted")
+                        }
+                    }
+
+                    Permission.STORAGE -> {
+                        if (it.isGranted) {
+                            onPickFromGallery()
+                        } else {
+                            showToast("Permission not granted")
+                        }
+                    }
+
+                    Permission.WRITE_STORAGE -> {}
+                    else -> {}
+                }
+            }
+        }
+    }
 
     Scaffold {
         if (showCamera) {
