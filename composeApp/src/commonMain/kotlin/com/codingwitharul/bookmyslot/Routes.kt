@@ -8,16 +8,17 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowSizeClass
 import com.codingwitharul.bookmyslot.presentation.MainViewModel
 import com.codingwitharul.bookmyslot.presentation.ui.home.HomeScreen
 import com.codingwitharul.bookmyslot.presentation.ui.home.screens.booking.BookingScreen
 import com.codingwitharul.bookmyslot.presentation.ui.login.LoginScreen
 import com.codingwitharul.bookmyslot.presentation.ui.onboarding.OnBoardScreen
-import com.codingwitharul.bookmyslot.presentation.ui.onboarding.components.ProfileImage
 import com.codingwitharul.bookmyslot.presentation.ui.pokedex.PokedexScreen
 import com.codingwitharul.bookmyslot.presentation.ui.splash.SplashScreen
 import multiplatform.network.cmptoast.showToast
@@ -32,8 +33,9 @@ fun Router(windowSizeClass: WindowSizeClass) {
     LaunchedEffect(data) {
         showToast("Timer state is greater than 30")
     }
-    NavHost(navController = navController, startDestination = AppRoutes.Home.name) {
-        composable(AppRoutes.Splash.name) {
+
+    NavHost(navController = navController, startDestination = AppRoutes.OnBoardScreen().route) {
+        composable(AppRoutes.Splash.route) {
             SplashScreen(mainVm.timerState) { userInfo ->
                 if (userInfo != null) {
                     navController.toHome()
@@ -42,35 +44,35 @@ fun Router(windowSizeClass: WindowSizeClass) {
                 }
             }
         }
-        composable(AppRoutes.Login.name) {
+        composable(AppRoutes.Login.route) {
             LoginScreen(mainVm.timerState) {
                 navController.toHome()
             }
         }
-        composable(AppRoutes.Pokedex.name) { PokedexScreen() }
-        composable(AppRoutes.Booking.name) { BookingScreen() }
-        composable(AppRoutes.Home.name) { HomeScreen() }
-        composable(AppRoutes.OnBoardScreen.name) {
-            OnBoardScreen(
-                windowSizeClass,
-                onClickCapture = {
-                    navController.navigate(AppRoutes.ProfileImage)
-                },
-                onClickGallery = {
+        composable(AppRoutes.Pokedex.route) { PokedexScreen() }
+        composable(AppRoutes.Booking.route) { BookingScreen() }
+        composable(AppRoutes.Home.route) { HomeScreen() }
 
-                })
+        composable(
+            route = AppRoutes.OnBoardScreen().route,
+            arguments = listOf(navArgument("imagePath") {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) {
+            OnBoardScreen(windowSizeClass)
         }
-        composable(AppRoutes.ProfileImage.name) { ProfileImage(windowSizeClass) }
     }
 }
 
-sealed class AppRoutes(val name: String) {
+sealed class AppRoutes(val route: String) {
     object Splash : AppRoutes("splash")
     object Login : AppRoutes("login")
     object Pokedex : AppRoutes("pokedex")
     object Booking : AppRoutes("booking")
     object Home : AppRoutes("home")
-    object OnBoardScreen : AppRoutes("OnBoardScreen")
+    data class OnBoardScreen(val imagePath: String? = null) :
+        AppRoutes("OnBoardScreen/${imagePath ?: "{imagePath}"}")
     object ProfileImage : AppRoutes("ProfileImage")
 }
 
@@ -79,9 +81,9 @@ fun NavController.toBooking(
     popUpToRoute: AppRoutes? = AppRoutes.Booking,
     inclusiveRoute: Boolean = true
 ) {
-    this.navigate(AppRoutes.Booking.name) {
+    this.navigate(AppRoutes.Booking.route) {
         popUpToRoute?.let {
-            popUpTo(popUpToRoute.name) {
+            popUpTo(popUpToRoute.route) {
                 inclusive = inclusiveRoute
             }
         }
@@ -90,16 +92,16 @@ fun NavController.toBooking(
 }
 
 fun NavHostController.navigate(routes: AppRoutes) {
-    this.navigate(routes.name)
+    this.navigate(routes.route)
 }
 
 fun NavController.toLogin(
     popUpToRoute: AppRoutes? = AppRoutes.Login,
     inclusiveRoute: Boolean = true
 ) {
-    this.navigate(AppRoutes.Login.name) {
+    this.navigate(AppRoutes.Login.route) {
         popUpToRoute?.let {
-            popUpTo(popUpToRoute.name) {
+            popUpTo(popUpToRoute.route) {
                 inclusive = inclusiveRoute
             }
         }
@@ -111,9 +113,9 @@ fun NavController.toHome(
     popUpToRoute: AppRoutes? = AppRoutes.Home,
     inclusiveRoute: Boolean = true
 ) {
-    this.navigate(AppRoutes.Home.name) {
+    this.navigate(AppRoutes.Home.route) {
         popUpToRoute?.let {
-            popUpTo(popUpToRoute.name) {
+            popUpTo(popUpToRoute.route) {
                 inclusive = inclusiveRoute
             }
         }

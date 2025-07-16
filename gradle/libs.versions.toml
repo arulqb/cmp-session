@@ -14,6 +14,7 @@ androidx-lifecycle = "2.9.0"
 androidx-testExt = "1.2.1"
 cameraX = "1.4.2"
 cmptoast = "1.0.3"
+coilNetworkOkhttp = "3.2.0"
 composeMultiplatform = "1.8.1"
 junit = "4.13.2"
 koinComposeViewmodel = "4.1.0"
@@ -47,6 +48,7 @@ androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", versi
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraX" }
 androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "material3AdaptiveNavigationSuite" }
 cmptoast = { module = "network.chaintech:cmptoast", version.ref = "cmptoast" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koinComposeViewmodelNavigation" }
 insert-koin-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koinCompose" }
 insert-koin-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinComposeViewmodel" }
