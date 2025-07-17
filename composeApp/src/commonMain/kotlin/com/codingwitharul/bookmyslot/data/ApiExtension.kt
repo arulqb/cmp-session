@@ -21,6 +21,7 @@ fun GoogleUser.toUserInfo(): UserInfo {
         lastLoginAt = now,
         createdAt = now,
         updatedAt = now,
-        isLoggedIn = true
+        isLoggedIn = true,
+        isUserOnBoarded = false
     )
 }

@@ -47,8 +47,11 @@ import bookmyslot.composeapp.generated.resources.stallion_beatsides_regular
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
+import com.codingwitharul.bookmyslot.common.HardWareInfo
 import com.codingwitharul.bookmyslot.common.rememberCameraManager
 import com.codingwitharul.bookmyslot.common.rememberGalleryManager
+import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
+import com.codingwitharul.bookmyslot.presentation.MainViewModel
 import com.codingwitharul.bookmyslot.presentation.ui.onboarding.components.ImageCaptureView
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
@@ -65,14 +68,15 @@ import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @Preview
 @Composable
 fun OnBoardScreen(
+    mainVm: MainViewModel,
     windowSizeClass: WindowSizeClass,
     onNext: () -> Unit = {}
 ) {
-
     var showCamera by remember { mutableStateOf(false) }
     var imagePath by remember { mutableStateOf<Path?>(null) }
     var imageFromPicker by remember { mutableStateOf<ImageBitmap?>(null) }
@@ -84,10 +88,11 @@ fun OnBoardScreen(
         permissionFactory.createPermissionsController()
     }
     BindEffect(permissionController)
-
 //    Moko End
+    val authRepo: AuthRepo = koinInject()
+    koinInject()
     val viewModel = viewModel {
-        OnBoardViewModel(permissionController)
+        OnBoardViewModel(permissionController, authRepo)
     }
 
     val gallery = rememberGalleryManager { result ->
@@ -193,6 +198,21 @@ fun OnBoardScreen(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 58.sp
                 )
+                Spacer(Modifier.height(8.dp))
+                mainVm.userInfo.value?.displayName?.let {
+                    Text(
+                        it,
+                        fontFamily = FontFamily(
+                            Font(
+                                resource = Res.font.stallion_beatsides_regular,
+                                weight = FontWeight.Normal,
+                                style = FontStyle.Normal
+                            )
+                        ),
+                        fontSize = 32.sp
+                    )
+                    Spacer(Modifier.height(8.dp))
+                }
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 200.dp)
@@ -231,7 +251,10 @@ fun OnBoardScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 IconButton(
-                    onClick = { onNext() }, colors = IconButtonDefaults.iconButtonColors().copy(
+                    onClick = {
+                        viewModel.onBoardUser()
+                        onNext()
+                    }, colors = IconButtonDefaults.iconButtonColors().copy(
                         containerColor = MaterialTheme.colorScheme.primary,
                     ), modifier = Modifier.size(62.dp)
                 ) {

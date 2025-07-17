@@ -14,6 +14,7 @@ import com.codingwitharul.bookmyslot.domain.repo.BookingRepo
 import com.codingwitharul.bookmyslot.domain.repo.DiscoverRepo
 import com.codingwitharul.bookmyslot.domain.repo.PokemonRepo
 import com.codingwitharul.bookmyslot.domain.usecase.GetDiscoveriesUseCase
+import com.codingwitharul.bookmyslot.domain.usecase.GetUserInfoUseCase
 import com.codingwitharul.bookmyslot.domain.usecase.LoginUseCase
 import com.codingwitharul.bookmyslot.presentation.MainViewModel
 import com.codingwitharul.bookmyslot.presentation.ui.home.screens.booking.BookingViewModel
@@ -39,6 +40,7 @@ val dataModule = module {
 
 val domainModule = module {
     singleOf(::GetDiscoveriesUseCase)
+    singleOf(::GetUserInfoUseCase)
 }
 val viewModelModule = module {
     viewModelOf(::SplashScreenViewModel)
@@ -55,5 +57,5 @@ val networkModule = module {
 
 expect val platformModule: Module // Platform specific Dependencies
 
-fun appModule() = listOf(networkModule, viewModelModule, dataModule, domainModule, platformModule)
+fun appModule() = listOf(networkModule, dataModule, domainModule, viewModelModule, platformModule)
 

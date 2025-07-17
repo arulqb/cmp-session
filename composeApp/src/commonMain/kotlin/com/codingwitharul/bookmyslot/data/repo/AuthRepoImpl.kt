@@ -45,6 +45,11 @@ class AuthRepoImpl(val db: DatabaseHelper, val apiClientHelper: ApiClientHelper)
         }
     }
 
+    override suspend fun updateOnBoardInfo(isOnBoarded: Boolean): Result<Unit> {
+        db.updateUserInfo(isOnBoarded)
+        return Result.success(Unit)
+    }
+
 
     override suspend fun sendVerificationCode(phone: String): Result<String> {
         // TODO: Implement with Firebase SDK in platform-specific code

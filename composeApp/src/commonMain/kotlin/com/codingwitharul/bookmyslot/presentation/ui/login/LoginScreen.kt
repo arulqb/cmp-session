@@ -20,7 +20,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,6 +40,7 @@ import bookmyslot.composeapp.generated.resources.login_illustration
 import bookmyslot.composeapp.generated.resources.logo_bml
 import bookmyslot.composeapp.generated.resources.sign_up
 import bookmyslot.composeapp.generated.resources.stallion_beatsides_regular
+import com.codingwitharul.bookmyslot.presentation.MainViewModel
 import com.codingwitharul.bookmyslot.presentation.components.GoogleButtonUiContainer
 import com.codingwitharul.bookmyslot.presentation.components.GoogleUser
 import kotlinx.coroutines.flow.filter
@@ -55,7 +55,7 @@ import org.koin.compose.koinInject
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun LoginScreen(stateLong: State<Long>, onLoginSuccess: () -> Unit) {
+fun LoginScreen(mainVm: MainViewModel, onLoginSuccess: () -> Unit) {
     val viewModel: LoginViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()
 
@@ -63,6 +63,7 @@ fun LoginScreen(stateLong: State<Long>, onLoginSuccess: () -> Unit) {
         viewModel.uiState.filter { it.isLoggedIn }
             .collect {
                 showToast("Logged In")
+                mainVm.setUserInfo(it.userInfo)
                 onLoginSuccess()
             }
     }

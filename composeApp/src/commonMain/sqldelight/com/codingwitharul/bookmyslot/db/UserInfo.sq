@@ -1,23 +1,22 @@
 import kotlin.Boolean;
 
 CREATE TABLE UserInfo (
-    userId TEXT PRIMARY KEY NOT NULL,          -- Unique identifier for the user (e.g., Firebase UID)
-    userName TEXT,                             -- Display name, can be updated by the user
-    email TEXT UNIQUE,                         -- Email address, often used for login and communication, should be unique
-    phoneNumber TEXT UNIQUE,                   -- Phone number, potentially unique if used for login/verification
-    photoUri TEXT,                             -- URI/URL to the user's profile photo
-    authToken TEXT,                            -- Authentication token (e.g., Firebase ID token, session token)
-                                               -- Note: Storing auth tokens requires careful security considerations.
-                                               -- Often, tokens are kept in memory or secure storage, not directly in a general user DB.
-                                               -- If this is a short-lived session token, it might be okay.
-    providerId TEXT,                           -- Authentication provider (e.g., "google.com", "facebook.com", "password")
+    userId TEXT PRIMARY KEY NOT NULL,
+    userName TEXT,
+    email TEXT UNIQUE,
+    phoneNumber TEXT UNIQUE,
+    photoUri TEXT,
+    authToken TEXT,
+    providerId TEXT,
     displayName TEXT,
-    bio TEXT,                                  -- A short biography or status for the user
-    dateOfBirth TEXT,                          -- Store as ISO8601 string ("YYYY-MM-DD")
-    lastLoginAt INTEGER,                       -- Timestamp of the last login (Unix epoch milliseconds)
+    bio TEXT,
+    dateOfBirth TEXT,
+    lastLoginAt INTEGER,
     isLoggedIn INTEGER AS Boolean NOT NULL DEFAULT 0,
-    createdAt INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000), -- Timestamp of creation (Unix epoch milliseconds)
-    updatedAt INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)  -- Timestamp of the last update (Unix epoch milliseconds)
+    isUserOnBoarded INTEGER AS Boolean NOT NULL DEFAULT 0,
+
+    createdAt INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000),
+    updatedAt INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
 );
 
 insertUser:
@@ -88,6 +87,7 @@ SET userName = ?,
     -- updatedAt will be handled by the trigger
 WHERE userId = ?;
 
+
 updateUserAuthToken:
 UPDATE UserInfo
 SET authToken = ?
@@ -99,6 +99,11 @@ UPDATE UserInfo
 SET lastLoginAt = ?
     -- updatedAt will be handled by the trigger
 WHERE userId = ?;
+
+updateUserOnBoardStatus:
+UPDATE UserInfo
+SET isUserOnBoarded = ?
+WHERE isLoggedIn = 1;
 
 -- DELETE Operation
 deleteUserById:

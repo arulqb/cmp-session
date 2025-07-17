@@ -58,4 +58,10 @@ class DatabaseHelper(val database: BookMySlot) {
     fun getActiveUserInfo():  UserInfo? {
         return userInfoQueries.getLoggedInUser().executeAsOneOrNull()
     }
+
+    fun updateUserInfo(isUserOnBoarded: Boolean) {
+        userInfoQueries.transaction {
+            userInfoQueries.updateUserOnBoardStatus(isUserOnBoarded)
+        }
+    }
 }

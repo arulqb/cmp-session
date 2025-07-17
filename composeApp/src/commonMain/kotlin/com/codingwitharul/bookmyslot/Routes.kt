@@ -5,7 +5,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -22,11 +21,13 @@ import com.codingwitharul.bookmyslot.presentation.ui.onboarding.OnBoardScreen
 import com.codingwitharul.bookmyslot.presentation.ui.pokedex.PokedexScreen
 import com.codingwitharul.bookmyslot.presentation.ui.splash.SplashScreen
 import multiplatform.network.cmptoast.showToast
+import org.koin.compose.koinInject
 
 @Composable
 fun Router(windowSizeClass: WindowSizeClass) {
     val navController = rememberNavController()
-    val mainVm = viewModel<MainViewModel>()
+    val mainVm: MainViewModel = koinInject()
+
     val data by remember {
         derivedStateOf { mainVm.timerState.value > 30 }
     }
@@ -36,16 +37,19 @@ fun Router(windowSizeClass: WindowSizeClass) {
 
     NavHost(navController = navController, startDestination = AppRoutes.Splash.route) {
         composable(AppRoutes.Splash.route) {
-            SplashScreen(mainVm.timerState) { userInfo ->
+            SplashScreen { userInfo ->
                 if (userInfo != null) {
-                    navController.toHome()
+                    if (userInfo.isUserOnBoarded)
+                        navController.toHome()
+                    else
+                        navController.toOnBoardScreen()
                 } else {
                     navController.toLogin()
                 }
             }
         }
         composable(AppRoutes.Login.route) {
-            LoginScreen(mainVm.timerState) {
+            LoginScreen(mainVm) {
                 navController.navigate(AppRoutes.OnBoardScreen().route)
             }
         }
@@ -60,12 +64,13 @@ fun Router(windowSizeClass: WindowSizeClass) {
                 nullable = true
             })
         ) {
-            OnBoardScreen(windowSizeClass) {
+            OnBoardScreen(mainVm, windowSizeClass) {
                 navController.toHome()
             }
         }
     }
 }
+
 
 sealed class AppRoutes(val route: String) {
     object Splash : AppRoutes("splash")
@@ -92,6 +97,16 @@ fun NavController.toBooking(
         launchSingleTop = true
     }
 }
+
+
+private fun NavHostController.toOnBoardScreen() {
+    this.navigate(AppRoutes.OnBoardScreen().route) {
+        popUpTo(AppRoutes.Splash.route) {
+            inclusive = true
+        }
+    }
+}
+
 
 fun NavHostController.navigate(routes: AppRoutes) {
     this.navigate(routes.route)

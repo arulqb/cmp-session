@@ -28,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -60,7 +59,7 @@ import org.koin.compose.koinInject
 
 @Preview
 @Composable
-internal fun SplashScreen(stateLong: State<Long>, onNavigate: (UserInfo?) -> Unit = {}) {
+internal fun SplashScreen(onNavigate: (UserInfo?) -> Unit = {}) {
 
     val viewModel: SplashScreenViewModel = koinInject()
     val state by viewModel.uiState.collectAsState()

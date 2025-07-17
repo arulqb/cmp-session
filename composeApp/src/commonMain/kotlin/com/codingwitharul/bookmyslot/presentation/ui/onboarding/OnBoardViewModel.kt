@@ -1,6 +1,8 @@
 package com.codingwitharul.bookmyslot.presentation.ui.onboarding
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
 import dev.icerock.moko.permissions.DeniedAlwaysException
 import dev.icerock.moko.permissions.DeniedException
 import dev.icerock.moko.permissions.Permission
@@ -8,8 +10,10 @@ import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-class OnBoardViewModel(val permissionsController: PermissionsController) : ViewModel() {
+class OnBoardViewModel(val permissionsController: PermissionsController, val authRepo: AuthRepo) :
+    ViewModel() {
 
     private var _state = MutableStateFlow(PermissionState())
     val state = _state.asStateFlow()
@@ -37,6 +41,12 @@ class OnBoardViewModel(val permissionsController: PermissionsController) : ViewM
             _state.value = state.value.copy(message = "Request Cancelled", permission = permission)
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun onBoardUser() {
+        viewModelScope.launch {
+            authRepo.updateOnBoardInfo(true)
         }
     }
 

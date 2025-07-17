@@ -8,4 +8,5 @@ interface AuthRepo {
     suspend fun verifyCode(verificationId: String, code: String): Result<Unit>
     suspend fun loginWithOAuthOnServer(user: GoogleUser): Result<UserInfo>
     suspend fun getSavedUserInfo(): Result<UserInfo>
-} 
+    suspend fun updateOnBoardInfo(isOnBoarded: Boolean): Result<Unit>
+}
