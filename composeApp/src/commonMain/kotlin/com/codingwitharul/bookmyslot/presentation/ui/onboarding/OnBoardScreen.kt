@@ -90,7 +90,6 @@ fun OnBoardScreen(
     BindEffect(permissionController)
 //    Moko End
     val authRepo: AuthRepo = koinInject()
-    koinInject()
     val viewModel = viewModel {
         OnBoardViewModel(permissionController, authRepo)
     }
