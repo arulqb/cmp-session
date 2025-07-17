@@ -47,7 +47,6 @@ import bookmyslot.composeapp.generated.resources.stallion_beatsides_regular
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
-import com.codingwitharul.bookmyslot.common.HardWareInfo
 import com.codingwitharul.bookmyslot.common.rememberCameraManager
 import com.codingwitharul.bookmyslot.common.rememberGalleryManager
 import com.codingwitharul.bookmyslot.domain.repo.AuthRepo
