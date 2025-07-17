@@ -35,11 +35,10 @@ val dataModule = module {
     single<BookingRepo> { BookingRepoImpl(get(), get()) }
     single<LoginUseCase> { LoginUseCase(get()) }
     single<DiscoverRepo> { DiscoverRepoImpl(get(), get()) }
-    singleOf(::GetDiscoveriesUseCase)
 }
 
 val domainModule = module {
-
+    singleOf(::GetDiscoveriesUseCase)
 }
 val viewModelModule = module {
     viewModelOf(::SplashScreenViewModel)
@@ -51,10 +50,10 @@ val viewModelModule = module {
 }
 
 val networkModule = module {
-    single<ApiClientHelper> { ApiClientHelper(get()) }
+    singleOf(::ApiClientHelper)
 }
 
 expect val platformModule: Module // Platform specific Dependencies
 
-fun appModule() = listOf(networkModule, viewModelModule, dataModule, platformModule)
+fun appModule() = listOf(networkModule, viewModelModule, dataModule, domainModule, platformModule)
 

@@ -34,7 +34,7 @@ fun Router(windowSizeClass: WindowSizeClass) {
         showToast("Timer state is greater than 30")
     }
 
-    NavHost(navController = navController, startDestination = AppRoutes.OnBoardScreen().route) {
+    NavHost(navController = navController, startDestination = AppRoutes.Splash.route) {
         composable(AppRoutes.Splash.route) {
             SplashScreen(mainVm.timerState) { userInfo ->
                 if (userInfo != null) {
@@ -46,7 +46,7 @@ fun Router(windowSizeClass: WindowSizeClass) {
         }
         composable(AppRoutes.Login.route) {
             LoginScreen(mainVm.timerState) {
-                navController.toHome()
+                navController.navigate(AppRoutes.OnBoardScreen().route)
             }
         }
         composable(AppRoutes.Pokedex.route) { PokedexScreen() }
@@ -60,7 +60,9 @@ fun Router(windowSizeClass: WindowSizeClass) {
                 nullable = true
             })
         ) {
-            OnBoardScreen(windowSizeClass)
+            OnBoardScreen(windowSizeClass) {
+                navController.toHome()
+            }
         }
     }
 }
@@ -73,7 +75,7 @@ sealed class AppRoutes(val route: String) {
     object Home : AppRoutes("home")
     data class OnBoardScreen(val imagePath: String? = null) :
         AppRoutes("OnBoardScreen/${imagePath ?: "{imagePath}"}")
-    object ProfileImage : AppRoutes("ProfileImage")
+
 }
 
 
@@ -110,15 +112,14 @@ fun NavController.toLogin(
 }
 
 fun NavController.toHome(
-    popUpToRoute: AppRoutes? = AppRoutes.Home,
+    replaceRoute: Boolean = true,
     inclusiveRoute: Boolean = true
 ) {
     this.navigate(AppRoutes.Home.route) {
-        popUpToRoute?.let {
-            popUpTo(popUpToRoute.route) {
+        if (replaceRoute)
+            popUpTo(AppRoutes.Home.route) {
                 inclusive = inclusiveRoute
             }
-        }
         launchSingleTop = true
     }
 }

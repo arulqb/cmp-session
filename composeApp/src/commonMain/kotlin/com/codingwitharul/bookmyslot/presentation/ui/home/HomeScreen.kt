@@ -74,13 +74,15 @@ fun HomeScreen() {
                 AppBottomBar(
                     currentDestination = currentDestination,
                     onItemSelected = { screen ->
+                        currentDestination = screen.route
                         navController.navigate(screen.route) {
                             popUpTo(navController.graph.startDestinationId)
                             launchSingleTop = true
                         }
                     }
                 )
-            }) {
+            }
+        ) {
             Box(Modifier.padding(bottom = it.calculateBottomPadding())) {
                 NavHost(
                     navController = navController,

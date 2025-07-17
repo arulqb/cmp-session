@@ -6,7 +6,6 @@ import dev.icerock.moko.permissions.DeniedException
 import dev.icerock.moko.permissions.Permission
 import dev.icerock.moko.permissions.PermissionsController
 import dev.icerock.moko.permissions.RequestCanceledException
-import io.ktor.utils.io.printStack
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -20,24 +19,24 @@ class OnBoardViewModel(val permissionsController: PermissionsController) : ViewM
             permissionsController.providePermission(permission)
             _state.value = state.value.copy(isGranted = true, permission = permission)
         } catch (e: DeniedException) {
-            e.printStack()
+            e.printStackTrace()
             _state.value = state.value.copy(
                 isDenied = true,
                 message = "Permission Denied",
                 permission = permission
             )
         } catch (e: DeniedAlwaysException) {
-            e.printStack()
+            e.printStackTrace()
             _state.value = state.value.copy(
                 isPermanentlyDeclined = true,
                 message = "Permission Denied Permanently",
                 permission = permission
             )
         } catch (e: RequestCanceledException) {
-            e.printStack()
+            e.printStackTrace()
             _state.value = state.value.copy(message = "Request Cancelled", permission = permission)
         } catch (e: Exception) {
-            e.printStack()
+            e.printStackTrace()
         }
     }
 
